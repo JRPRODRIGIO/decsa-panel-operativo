@@ -67,11 +67,13 @@ body{
 .brand-sub{color:#fff;font-weight:600;font-size:15px;letter-spacing:.02em;opacity:.92;}
 .topbar-right{display:flex;align-items:center;gap:20px;}
 .period{color:rgba(255,255,255,.65);font-size:13px;font-weight:500;}
+.avatar-wrap{display:flex;align-items:center;gap:10px;}
 .avatar{
   width:36px;height:36px;border-radius:50%;
   background:var(--red);color:#fff;font-weight:700;font-size:13px;
-  display:flex;align-items:center;justify-content:center;letter-spacing:.04em;
+  display:flex;align-items:center;justify-content:center;letter-spacing:.04em;flex-shrink:0;
 }
+.avatar-name{color:rgba(255,255,255,.85);font-size:13px;font-weight:600;}
 
 /* ---------- Tabs ---------- */
 .tabs{
@@ -1063,7 +1065,10 @@ function App() {
         </div>
         <div className="topbar-right">
           <div className="period">Periodo activo · Junio 2026</div>
-          <div className="avatar">RA</div>
+          <div className="avatar-wrap">
+              <div className="avatar">D</div>
+              <span className="avatar-name">Deyanira</span>
+            </div>
         </div>
       </header>
 
