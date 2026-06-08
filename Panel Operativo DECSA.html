@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Panel Operativo DECSA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Libre+Franklin:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --navy-900:#0c1f33;
+  --navy-800:#102a42;
+  --navy-700:#16395a;
+  --red:#e30613;
+  --red-dark:#c2050f;
+  --bg:#f4f6f9;
+  --card:#ffffff;
+  --ink:#15263a;
+  --ink-2:#46586c;
+  --ink-3:#7a8a9c;
+  --line:#e4e9ef;
+  --line-2:#eef2f6;
+  --green:#1f9d61;
+  --green-bg:#e7f5ee;
+  --amber:#c98a00;
+  --amber-bg:#fbf2dd;
+  --danger:#d23030;
+  --danger-bg:#fbe9e9;
+  --radius:14px;
+  --shadow:0 1px 2px rgba(16,42,66,.05), 0 8px 24px rgba(16,42,66,.06);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:"Libre Franklin",system-ui,sans-serif;
+  background:var(--bg);
+  background-image:radial-gradient(rgba(16,42,66,.05) 1px, transparent 1px);
+  background-size:22px 22px;
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  font-size:15px;
+}
+.display{font-family:"Archivo","Libre Franklin",sans-serif;}
+.mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;}
+.num{text-align:right;}
+.nowrap{white-space:nowrap;}
+.muted{color:var(--ink-3);}
+.strong{font-weight:700;color:var(--ink);}
+
+/* ---------- Topbar ---------- */
+.app{min-height:100vh;display:flex;flex-direction:column;}
+.topbar{
+  background:linear-gradient(180deg,var(--navy-800),var(--navy-900));
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;height:68px;position:relative;overflow:hidden;
+}
+.topbar::after{
+  content:"";position:absolute;right:0;top:0;bottom:0;width:340px;pointer-events:none;
+  background-image:repeating-linear-gradient(115deg,rgba(255,255,255,.05) 0 1px,transparent 1px 26px);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000);
+  mask-image:linear-gradient(90deg,transparent,#000);
+}
+.brand{display:flex;align-items:center;gap:18px;}
+.logo{height:30px;display:block;}
+.brand-div{width:1px;height:26px;background:rgba(255,255,255,.18);}
+.brand-sub{color:#fff;font-weight:600;font-size:15px;letter-spacing:.02em;opacity:.92;}
+.topbar-right{display:flex;align-items:center;gap:20px;}
+.period{color:rgba(255,255,255,.65);font-size:13px;font-weight:500;}
+.avatar{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--red);color:#fff;font-weight:700;font-size:13px;
+  display:flex;align-items:center;justify-content:center;letter-spacing:.04em;
+}
+
+/* ---------- Tabs ---------- */
+.tabs{
+  background:var(--navy-900);
+  display:flex;gap:4px;padding:0 24px;
+  border-bottom:3px solid var(--red);
+}
+.tab{
+  appearance:none;border:0;background:transparent;cursor:pointer;
+  color:rgba(255,255,255,.62);font-family:inherit;font-size:14px;font-weight:600;
+  padding:13px 18px;display:flex;align-items:center;gap:9px;
+  border-bottom:3px solid transparent;margin-bottom:-3px;
+  transition:color .15s,background .15s;
+}
+.tab svg{opacity:.8;}
+.tab:hover{color:#fff;background:rgba(255,255,255,.05);}
+.tab.is-active{color:#fff;border-bottom-color:#fff;}
+.tab.is-active svg{opacity:1;}
+
+/* ---------- Content ---------- */
+.content{flex:1;padding:34px 40px 48px;max-width:1280px;width:100%;margin:0 auto;}
+.module-head{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px;}
+.eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:8px;}
+.module-title{font-family:"Archivo",sans-serif;font-size:32px;font-weight:800;letter-spacing:-.02em;margin:0 0 6px;color:var(--navy-900);}
+.module-sub{margin:0;color:var(--ink-2);font-size:14.5px;}
+
+/* ---------- KPIs ---------- */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:26px;}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);}
+.kpi-label{font-size:12.5px;color:var(--ink-3);font-weight:600;margin-bottom:8px;}
+.kpi-value{font-family:"Archivo",sans-serif;font-size:24px;font-weight:800;letter-spacing:-.02em;color:var(--navy-900);font-variant-numeric:tabular-nums;}
+.kpi-accent{background:var(--navy-800);border-color:var(--navy-800);}
+.kpi-accent .kpi-label{color:rgba(255,255,255,.65);}
+.kpi-accent .kpi-value{color:#fff;}
+
+/* ---------- Buttons ---------- */
+.btn-primary{
+  appearance:none;border:0;cursor:pointer;font-family:inherit;font-weight:700;font-size:14px;
+  background:var(--red);color:#fff;padding:12px 20px;border-radius:10px;
+  display:inline-flex;align-items:center;gap:9px;white-space:nowrap;position:relative;overflow:hidden;
+  box-shadow:0 6px 16px rgba(227,6,19,.22);transition:background .15s,transform .08s;
+}
+.btn-content{display:inline-flex;align-items:center;gap:9px;position:relative;z-index:2;}
+.btn-primary:hover{background:var(--red-dark);}
+.btn-primary:active{transform:translateY(1px);}
+.btn-primary:disabled{cursor:default;opacity:1;}
+.btn-primary.is-loading{background:var(--red-dark);}
+.btn-primary.is-done{background:var(--green);box-shadow:0 6px 16px rgba(31,157,97,.22);}
+.btn-progress{position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(255,255,255,.22);z-index:1;animation:fill 1.5s cubic-bezier(.4,.1,.2,1) forwards;}
+@keyframes fill{from{width:0;}to{width:100%;}}
+.btn-ghost{
+  appearance:none;cursor:pointer;font-family:inherit;font-weight:600;font-size:13px;
+  background:#fff;color:var(--navy-800);border:1px solid var(--line);padding:8px 13px;border-radius:9px;
+  display:inline-flex;align-items:center;gap:7px;transition:background .15s,border-color .15s;
+}
+.btn-ghost:hover{background:var(--bg);border-color:#d5dde6;}
+.spinner{width:15px;height:15px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ---------- Tables ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);}
+.table-card{overflow:hidden;}
+.data-table{width:100%;border-collapse:collapse;font-size:14px;}
+.data-table thead th{
+  text-align:left;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-3);padding:14px 18px;background:#fafbfc;border-bottom:1px solid var(--line);
+}
+.data-table thead th.num{text-align:right;}
+.data-table tbody td{padding:14px 18px;border-bottom:1px solid var(--line-2);color:var(--ink-2);}
+.data-table tbody tr:last-child td{border-bottom:0;}
+.data-table tbody tr:hover{background:#fafcfe;}
+.data-table tfoot td{padding:15px 18px;background:#fafbfc;border-top:2px solid var(--line);font-weight:700;color:var(--navy-900);font-size:13.5px;}
+.route-pill{display:inline-block;background:var(--navy-800);color:#fff;font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;padding:4px 9px;border-radius:6px;letter-spacing:.02em;}
+.total-cell{vertical-align:middle;}
+.total-cell .mono{display:block;}
+.cost-bar{display:block;width:88px;height:4px;margin:6px 0 0 auto;background:var(--line-2);border-radius:3px;overflow:hidden;}
+.cost-bar-fill{display:block;height:100%;background:linear-gradient(90deg,var(--navy-700),var(--navy-800));border-radius:3px;}
+@media(max-width:980px){.col-wide{display:none;}}
+
+/* ---------- Filters ---------- */
+.filters{display:flex;align-items:center;flex-wrap:wrap;gap:22px;margin-bottom:22px;}
+.fg{display:flex;align-items:center;gap:11px;}
+.fg-label{font-size:12.5px;font-weight:700;color:var(--ink-3);}
+.seg{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px;}
+.seg-btn{appearance:none;border:0;background:transparent;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:var(--ink-2);padding:7px 14px;border-radius:7px;transition:all .12s;}
+.seg-btn:hover{color:var(--navy-800);}
+.seg-btn.is-active{background:var(--navy-800);color:#fff;}
+.filter-count{margin-left:auto;font-size:13px;color:var(--ink-3);font-weight:600;}
+
+/* ---------- Service groups ---------- */
+.svc-group{margin-bottom:30px;}
+.svc-group:last-child{margin-bottom:0;}
+.grp-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;padding:0 2px 14px;margin-bottom:16px;border-bottom:1px solid var(--line);}
+.grp-id{display:flex;flex-direction:column;gap:3px;}
+.grp-name{font-family:"Archivo",sans-serif;font-size:17px;font-weight:700;color:var(--navy-900);margin:0;letter-spacing:-.01em;}
+.grp-dir{font-size:12.5px;color:var(--ink-3);}
+.grp-stats{display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.grp-chip{font-size:12px;font-weight:700;color:var(--ink-2);background:#fff;border:1px solid var(--line);padding:5px 11px;border-radius:20px;white-space:nowrap;}
+.grp-chip.chip-alert{color:var(--danger);background:var(--danger-bg);border-color:transparent;}
+.grp-total{display:flex;flex-direction:column;align-items:flex-end;line-height:1.1;}
+.grp-total-k{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);}
+.grp-total-v{font-family:"Archivo",sans-serif;font-size:17px;font-weight:800;color:var(--navy-900);}
+
+/* ---------- Service cards ---------- */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:18px;}
+.svc-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;display:flex;flex-direction:column;border-left:4px solid var(--line);}
+.svc-pagado{border-left-color:var(--green);}
+.svc-pendiente{border-left-color:var(--amber);}
+.svc-vencido{border-left-color:var(--danger);}
+.svc-top{display:flex;align-items:flex-start;gap:13px;margin-bottom:16px;}
+.svc-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ico-luz{background:#fff5e0;color:#c98a00;}
+.ico-agua{background:#e6f2fb;color:#1f78c9;}
+.ico-gas{background:#fbeae6;color:#cf5a30;}
+.svc-headtext{flex:1;min-width:0;}
+.svc-local{font-weight:700;font-size:15px;color:var(--navy-900);}
+.svc-dir{font-size:12px;color:var(--ink-3);margin-top:2px;line-height:1.4;}
+.badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
+.badge-pagado{background:var(--green-bg);color:var(--green);}
+.badge-pendiente{background:var(--amber-bg);color:var(--amber);}
+.badge-vencido{background:var(--danger-bg);color:var(--danger);}
+.svc-body{border-top:1px solid var(--line-2);padding-top:13px;display:flex;flex-direction:column;gap:9px;}
+.svc-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:13.5px;}
+.svc-k{color:var(--ink-3);font-weight:600;flex-shrink:0;}
+.svc-v{color:var(--ink);text-align:right;font-weight:500;}
+.svc-due{display:inline-block;margin-left:8px;font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px;}
+.due-ok{background:var(--green-bg);color:var(--green);}
+.due-soon{background:var(--amber-bg);color:var(--amber);}
+.due-late{background:var(--danger-bg);color:var(--danger);}
+.svc-foot{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px solid var(--line-2);}
+.svc-monto{font-size:20px;font-weight:800;color:var(--navy-900);}
+.empty{grid-column:1/-1;text-align:center;color:var(--ink-3);padding:50px;background:#fff;border:1px dashed var(--line);border-radius:var(--radius);}
+
+/* ---------- Toast ---------- */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--navy-900);color:#fff;padding:13px 20px;border-radius:11px;font-size:14px;display:flex;align-items:center;gap:9px;box-shadow:0 12px 32px rgba(12,31,51,.3);animation:rise .25s ease;z-index:50;}
+.toast strong{font-weight:700;}
+@keyframes rise{from{opacity:0;transform:translate(-50%,12px);}to{opacity:1;transform:translate(-50%,0);}}
+
+/* ---------- Seguros ---------- */
+.legend{display:flex;gap:18px;margin-left:auto;flex-wrap:wrap;}
+.lg{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-2);font-weight:600;}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
+.dot-verde{background:var(--green);}
+.dot-amarillo{background:var(--amber);}
+.dot-rojo{background:var(--danger);}
+.seg-bar-cell{width:6px;padding:0 !important;}
+.seg-bar{display:block;width:4px;height:40px;border-radius:3px;margin-left:14px;}
+.bar-verde{background:var(--green);}
+.bar-amarillo{background:var(--amber);}
+.bar-rojo{background:var(--danger);}
+.tag{font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:6px;}
+.tag-empresa{background:#e9eef5;color:var(--navy-700);}
+.tag-personal{background:#f0ecf7;color:#6b4ea8;}
+.due-chip{font-size:12px;font-weight:700;padding:4px 11px;border-radius:7px;display:inline-block;min-width:64px;text-align:center;}
+.chip-verde{background:var(--green-bg);color:var(--green);}
+.chip-amarillo{background:var(--amber-bg);color:var(--amber);}
+.chip-rojo{background:var(--danger-bg);color:var(--danger);}
+
+/* ---------- Reveal animations ---------- */
+@keyframes revealUp{from{transform:translateY(14px);}to{transform:translateY(0);}}
+@keyframes revealRow{from{transform:translateY(8px);}to{transform:translateY(0);}}
+.reveal{animation:revealUp .5s cubic-bezier(.2,.7,.2,1) forwards;}
+.reveal-row{animation:revealRow .45s ease forwards;}
+.module-head{animation:revealUp .5s cubic-bezier(.2,.7,.2,1) forwards;}
+.seg-bar{transition:height .18s ease,margin-top .18s ease;}
+.data-table tbody tr:hover .seg-bar{height:46px;margin-top:-3px;}
+@media(prefers-reduced-motion:reduce){
+  .reveal,.reveal-row,.module-head,.btn-progress{animation:none!important;opacity:1!important;transform:none!important;}
+}
+
+/* ---------- Timeline (Seguros) ---------- */
+.timeline-card{padding:20px 26px 30px;margin-bottom:22px;}
+.tl-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:26px;}
+.tl-title{font-family:"Archivo",sans-serif;font-weight:700;font-size:14px;color:var(--navy-900);}
+.tl-hint{font-size:12px;color:var(--ink-3);}
+.tl-track{position:relative;height:30px;margin:0 6px;}
+.tl-line{position:absolute;left:0;right:0;top:14px;height:2px;background:var(--line);border-radius:2px;}
+.tl-tick{position:absolute;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;}
+.tl-tickline{width:1px;height:18px;background:var(--line);}
+.tl-ticklabel{font-size:10.5px;color:var(--ink-3);font-weight:600;margin-top:5px;font-family:"IBM Plex Mono",monospace;}
+.tl-mark{position:absolute;top:8px;width:14px;height:14px;border-radius:50%;transform:translateX(-50%);border:2.5px solid #fff;cursor:pointer;z-index:3;box-shadow:0 1px 4px rgba(16,42,66,.25);transition:transform .12s;}
+.tl-mark:hover{transform:translateX(-50%) scale(1.35);z-index:5;}
+.mk-verde{background:var(--green);}
+.mk-amarillo{background:var(--amber);}
+.mk-rojo{background:var(--danger);}
+.tl-tip{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy-900);color:#fff;padding:9px 12px;border-radius:9px;display:flex;flex-direction:column;gap:2px;white-space:nowrap;font-size:12px;box-shadow:0 8px 22px rgba(12,31,51,.3);z-index:10;}
+.tl-tip strong{font-size:12.5px;font-weight:700;}
+.tl-tip span{color:rgba(255,255,255,.7);}
+.tl-tip::after{content:"";position:absolute;bottom:-5px;left:50%;transform:translateX(-50%) rotate(45deg);width:9px;height:9px;background:var(--navy-900);}
+
+/* ---------- Calendario ---------- */
+.cal-legend{display:flex;gap:8px;flex-wrap:wrap;}
+.leg-toggle{appearance:none;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:600;display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:20px;border:1px solid var(--line);background:#fff;color:var(--ink-3);transition:all .14s;}
+.leg-toggle .leg-dot{width:9px;height:9px;border-radius:50%;background:currentColor;opacity:.35;transition:opacity .14s;}
+.leg-toggle.on{color:#fff;border-color:transparent;}
+.leg-toggle.on .leg-dot{opacity:1;background:#fff;}
+.leg-toggle.ev-servicio.on{background:#1f78c9;}
+.leg-toggle.ev-seguro.on{background:#6b4ea8;}
+.leg-toggle.ev-vuelo.on{background:var(--navy-700);}
+.leg-toggle:not(.on):hover{border-color:#cdd6df;color:var(--ink-2);}
+
+.cal-wrap{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start;}
+@media(max-width:1080px){.cal-wrap{grid-template-columns:1fr;}}
+.cal-card{padding:18px 18px 20px;}
+.cal-bar{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding:0 4px;}
+.cal-nav{appearance:none;cursor:pointer;width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--navy-800);font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;transition:background .14s;}
+.cal-nav:hover{background:var(--bg);}
+.cal-month{font-family:"Archivo",sans-serif;font-size:20px;font-weight:800;color:var(--navy-900);margin:0;letter-spacing:-.01em;}
+.cal-month span{color:var(--ink-3);font-weight:600;}
+.cal-today{margin-left:auto;appearance:none;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:700;color:var(--navy-800);background:#fff;border:1px solid var(--line);padding:8px 14px;border-radius:9px;transition:background .14px;}
+.cal-today:hover{background:var(--bg);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);}
+.cal-dow{margin-bottom:6px;}
+.dow{text-align:center;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);padding:6px 0;}
+.cal-days{gap:6px;}
+.cal-cell{appearance:none;text-align:left;font-family:inherit;cursor:pointer;background:#fff;border:1px solid var(--line-2);border-radius:9px;min-height:96px;padding:7px 7px 6px;display:flex;flex-direction:column;gap:4px;transition:border-color .12s,box-shadow .12s;overflow:hidden;}
+.cal-cell.empty-cell{background:transparent;border-color:transparent;cursor:default;}
+.cal-cell.has-ev:hover{border-color:#c5d0db;box-shadow:0 4px 12px rgba(16,42,66,.08);}
+.cal-cell.is-hoy{border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red);}
+.cal-cell.is-sel{border-color:var(--navy-800);box-shadow:inset 0 0 0 1px var(--navy-800);}
+.cell-num{font-size:13px;font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums;}
+.cal-cell.is-hoy .cell-num{color:var(--red);}
+.cell-evs{display:flex;flex-direction:column;gap:3px;}
+.ev-pill{font-size:10.5px;font-weight:600;line-height:1.25;padding:2px 6px;border-radius:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff;}
+.ev-servicio{color:#1f78c9;}
+.ev-pill.ev-servicio{background:#e6f2fb;color:#15598f;}
+.ev-pill.ev-servicio.is-vencido{background:var(--danger-bg);color:var(--danger);}
+.ev-seguro{color:#6b4ea8;}
+.ev-pill.ev-seguro{background:#f0ecf7;color:#583c8c;}
+.ev-vuelo{color:var(--navy-700);}
+.ev-pill.ev-vuelo{background:#e9eef5;color:var(--navy-700);}
+.ev-more{font-size:10px;font-weight:700;color:var(--ink-3);padding-left:2px;}
+
+.cal-side{position:sticky;top:18px;}
+.side-card{padding:0;overflow:hidden;}
+.side-head{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;border-bottom:1px solid var(--line);font-family:"Archivo",sans-serif;font-weight:700;font-size:14px;color:var(--navy-900);}
+.side-count{background:var(--navy-800);color:#fff;font-size:12px;font-weight:700;min-width:24px;height:24px;border-radius:12px;display:flex;align-items:center;justify-content:center;padding:0 7px;}
+.side-close{appearance:none;cursor:pointer;background:none;border:0;font-family:inherit;font-size:12.5px;font-weight:700;color:var(--red);}
+.side-list{display:flex;flex-direction:column;max-height:560px;overflow-y:auto;}
+.side-empty{padding:30px 18px;text-align:center;color:var(--ink-3);font-size:13px;}
+.agenda-item{display:flex;align-items:stretch;gap:11px;padding:12px 16px;border-bottom:1px solid var(--line-2);}
+.agenda-item:last-child{border-bottom:0;}
+.ag-bar{width:3px;border-radius:3px;flex-shrink:0;background:currentColor;}
+.ag-body{flex:1;min-width:0;}
+.ag-title{font-size:13.5px;font-weight:700;color:var(--navy-900);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ag-detalle{font-size:12px;color:var(--ink-3);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ag-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;}
+.ag-date{font-size:11.5px;color:var(--ink-3);font-weight:600;}
+.ag-chip{font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px;white-space:nowrap;}
+
+/* ---------- Footer ---------- */
+.footer{text-align:center;padding:20px;font-size:12.5px;color:var(--ink-3);border-top:1px solid var(--line);background:#fff;}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+<!-- data -->
+<script type="text/babel">
+// ===== DECSA — Datos ficticios (México) =====
+const MXN = (n) =>
+  n.toLocaleString('es-MX', { style: 'currency', currency: 'MXN', minimumFractionDigits: 0, maximumFractionDigits: 0 });
+const MXN2 = (n) =>
+  n.toLocaleString('es-MX', { style: 'currency', currency: 'MXN', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmtDate = (iso) => {
+  const d = new Date(iso + 'T00:00:00');
+  return d.toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' });
+};
+const fmtDateShort = (iso) => {
+  const d = new Date(iso + 'T00:00:00');
+  return d.toLocaleDateString('es-MX', { day: '2-digit', month: 'short' });
+};
+const HOY = new Date('2026-06-08T00:00:00');
+const daysUntil = (iso) => Math.round((new Date(iso + 'T00:00:00') - HOY) / 86400000);
+
+const AVION = {
+  matricula: 'XA-DEC',
+  modelo: 'Cessna Citation CJ3+',
+  periodo: 'Mayo 2026',
+};
+const VUELOS = [
+  { id: 1, fecha: '2026-05-02', ruta: 'MTY → MEX', origen: 'Monterrey', destino: 'Ciudad de México', horas: 1.6, costoHora: 92000, pasajeros: 4 },
+  { id: 2, fecha: '2026-05-05', ruta: 'MEX → MTY', origen: 'Ciudad de México', destino: 'Monterrey', horas: 1.7, costoHora: 92000, pasajeros: 4 },
+  { id: 3, fecha: '2026-05-09', ruta: 'MTY → GDL', origen: 'Monterrey', destino: 'Guadalajara', horas: 1.3, costoHora: 92000, pasajeros: 6 },
+  { id: 4, fecha: '2026-05-11', ruta: 'GDL → CUN', origen: 'Guadalajara', destino: 'Cancún', horas: 2.4, costoHora: 98000, pasajeros: 6 },
+  { id: 5, fecha: '2026-05-14', ruta: 'CUN → MTY', origen: 'Cancún', destino: 'Monterrey', horas: 2.9, costoHora: 98000, pasajeros: 5 },
+  { id: 6, fecha: '2026-05-18', ruta: 'MTY → SAT', origen: 'Monterrey', destino: 'San Antonio, TX', horas: 1.1, costoHora: 105000, pasajeros: 3 },
+  { id: 7, fecha: '2026-05-21', ruta: 'SAT → MTY', origen: 'San Antonio, TX', destino: 'Monterrey', horas: 1.2, costoHora: 105000, pasajeros: 3 },
+  { id: 8, fecha: '2026-05-24', ruta: 'MTY → TLC', origen: 'Monterrey', destino: 'Toluca', horas: 1.5, costoHora: 92000, pasajeros: 4 },
+  { id: 9, fecha: '2026-05-27', ruta: 'TLC → SJD', origen: 'Toluca', destino: 'Los Cabos', horas: 2.1, costoHora: 98000, pasajeros: 7 },
+  { id: 10, fecha: '2026-05-30', ruta: 'SJD → MTY', origen: 'Los Cabos', destino: 'Monterrey', horas: 2.3, costoHora: 98000, pasajeros: 7 },
+];
+
+const SERVICIOS = [
+  { id: 1, local: 'Local Garza Sada', direccion: 'Av. Eugenio Garza Sada 2110, Monterrey', servicio: 'Luz', proveedor: 'CFE', monto: 18450, vence: '2026-06-12', estatus: 'Pendiente' },
+  { id: 2, local: 'Local Garza Sada', direccion: 'Av. Eugenio Garza Sada 2110, Monterrey', servicio: 'Agua', proveedor: 'Agua y Drenaje de Monterrey', monto: 3240, vence: '2026-06-20', estatus: 'Pendiente' },
+  { id: 3, local: 'Oficina Centro', direccion: 'Padre Mier 320, Centro, Monterrey', servicio: 'Luz', proveedor: 'CFE', monto: 12980, vence: '2026-05-28', estatus: 'Vencido' },
+  { id: 4, local: 'Oficina Centro', direccion: 'Padre Mier 320, Centro, Monterrey', servicio: 'Gas', proveedor: 'Naturgy', monto: 2150, vence: '2026-06-15', estatus: 'Pendiente' },
+  { id: 5, local: 'Bodega Santa Catarina', direccion: 'Carr. Saltillo Km 7, Santa Catarina', servicio: 'Luz', proveedor: 'CFE', monto: 41200, vence: '2026-05-30', estatus: 'Pagado' },
+  { id: 6, local: 'Bodega Santa Catarina', direccion: 'Carr. Saltillo Km 7, Santa Catarina', servicio: 'Agua', proveedor: 'Agua y Drenaje de Monterrey', monto: 6780, vence: '2026-06-22', estatus: 'Pendiente' },
+  { id: 7, local: 'Local Cumbres', direccion: 'Paseo de los Leones 1500, Cumbres', servicio: 'Luz', proveedor: 'CFE', monto: 9870, vence: '2026-06-08', estatus: 'Pendiente' },
+  { id: 8, local: 'Local Cumbres', direccion: 'Paseo de los Leones 1500, Cumbres', servicio: 'Gas', proveedor: 'Gas Natural Fenosa', monto: 1890, vence: '2026-05-25', estatus: 'Vencido' },
+  { id: 9, local: 'Oficina San Pedro', direccion: 'Calzada del Valle 400, San Pedro Garza García', servicio: 'Luz', proveedor: 'CFE', monto: 15600, vence: '2026-06-18', estatus: 'Pagado' },
+  { id: 10, local: 'Oficina San Pedro', direccion: 'Calzada del Valle 400, San Pedro Garza García', servicio: 'Agua', proveedor: 'Agua y Drenaje de Monterrey', monto: 2980, vence: '2026-06-19', estatus: 'Pendiente' },
+  { id: 11, local: 'Planta Apodaca', direccion: 'Parque Ind. Stiva, Apodaca', servicio: 'Luz', proveedor: 'CFE', monto: 68400, vence: '2026-06-10', estatus: 'Pendiente' },
+  { id: 12, local: 'Planta Apodaca', direccion: 'Parque Ind. Stiva, Apodaca', servicio: 'Gas', proveedor: 'Naturgy', monto: 12350, vence: '2026-05-27', estatus: 'Pagado' },
+];
+
+const SEGUROS = [
+  { id: 1, vehiculo: 'Toyota Hilux 2024', placas: 'SXA-15-21', aseguradora: 'Qualitas', tipo: 'Empresa', prima: 2180, vence: '2026-06-09' },
+  { id: 2, vehiculo: 'Nissan NP300 2023', placas: 'SVT-88-04', aseguradora: 'GNP', tipo: 'Empresa', prima: 1950, vence: '2026-06-21' },
+  { id: 3, vehiculo: 'VW Jetta 2022', placas: 'SPM-42-77', aseguradora: 'AXA', tipo: 'Personal', prima: 1420, vence: '2026-07-14' },
+  { id: 4, vehiculo: 'Ford Ranger 2024', placas: 'SXB-09-33', aseguradora: 'HDI', tipo: 'Empresa', prima: 2310, vence: '2026-06-06' },
+  { id: 5, vehiculo: 'Honda CR-V 2023', placas: 'SLM-71-58', aseguradora: 'Mapfre', tipo: 'Personal', prima: 1880, vence: '2026-08-02' },
+  { id: 6, vehiculo: 'Mazda CX-5 2025', placas: 'SXC-63-19', aseguradora: 'Chubb', tipo: 'Empresa', prima: 2050, vence: '2026-06-30' },
+  { id: 7, vehiculo: 'Nissan Versa 2021', placas: 'SKR-27-90', aseguradora: 'Qualitas', tipo: 'Personal', prima: 980, vence: '2026-09-11' },
+  { id: 8, vehiculo: 'Chevrolet Aveo 2022', placas: 'SPL-54-66', aseguradora: 'Banorte Seguros', tipo: 'Empresa', prima: 1120, vence: '2026-06-15' },
+  { id: 9, vehiculo: 'Toyota Corolla 2024', placas: 'SXD-31-48', aseguradora: 'GNP', tipo: 'Personal', prima: 1560, vence: '2026-07-28' },
+  { id: 10, vehiculo: 'Kia Sportage 2023', placas: 'SVN-95-12', aseguradora: 'AXA', tipo: 'Empresa', prima: 2240, vence: '2026-06-25' },
+  { id: 11, vehiculo: 'RAM 1500 2025', placas: 'SXE-77-83', aseguradora: 'HDI', tipo: 'Empresa', prima: 3180, vence: '2026-08-19' },
+];
+
+Object.assign(window, { MXN, MXN2, fmtDate, fmtDateShort, HOY, daysUntil, AVION, VUELOS, SERVICIOS, SEGUROS });
+</script>
+
+<!-- icons -->
+<script type="text/babel">
+const S = { fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round' };
+
+function IconPlane() {
+  return <svg viewBox="0 0 24 24" width="18" height="18" {...S}><path d="M3.5 13.5 21 5l-3.5 8.5L21 22l-4.5-2.5L12 21l-1-4.5L3.5 13.5Z"/></svg>;
+}
+function IconBolt() {
+  return <svg viewBox="0 0 24 24" width="18" height="18" {...S}><path d="M13 3 4 14h6l-1 7 9-11h-6l1-7Z"/></svg>;
+}
+function IconShield() {
+  return <svg viewBox="0 0 24 24" width="18" height="18" {...S}><path d="M12 3 5 6v5c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6l-7-3Z"/></svg>;
+}
+function IconCalendar() {
+  return <svg viewBox="0 0 24 24" width="18" height="18" {...S}><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 9.5h17M8 3.5v3M16 3.5v3"/></svg>;
+}
+function IconExcel() {
+  return <svg viewBox="0 0 24 24" width="16" height="16" {...S}><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8l-5-5Z"/><path d="M14 3v5h5"/><path d="m9.5 12 5 5m0-5-5 5"/></svg>;
+}
+function IconCheck() {
+  return <svg viewBox="0 0 24 24" width="16" height="16" {...S}><path d="m5 13 4 4L19 7"/></svg>;
+}
+function IconUpload() {
+  return <svg viewBox="0 0 24 24" width="15" height="15" {...S}><path d="M12 16V5m0 0L8 9m4-4 4 4"/><path d="M5 19h14"/></svg>;
+}
+function ServiceIcon({ tipo }) {
+  if (tipo === 'Luz') return <svg viewBox="0 0 24 24" width="20" height="20" {...S}><path d="M13 3 4 14h6l-1 7 9-11h-6l1-7Z"/></svg>;
+  if (tipo === 'Agua') return <svg viewBox="0 0 24 24" width="20" height="20" {...S}><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/></svg>;
+  return <svg viewBox="0 0 24 24" width="20" height="20" {...S}><path d="M9 3h6v4l2 2v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V9l2-2V3Z"/><path d="M7 12h10"/></svg>;
+}
+
+Object.assign(window, { IconPlane, IconBolt, IconShield, IconCalendar, IconExcel, IconCheck, IconUpload, ServiceIcon });
+</script>
+
+<!-- util -->
+<script type="text/babel">
+function useCountUp(target, duration = 900) {
+  const [val, setVal] = React.useState(0);
+  React.useEffect(() => {
+    if (typeof target !== 'number' || !isFinite(target)) { setVal(target); return; }
+    const start = Date.now();
+    const ease = (t) => 1 - Math.pow(1 - t, 3);
+    const id = setInterval(() => {
+      const p = Math.min((Date.now() - start) / duration, 1);
+      setVal(target * ease(p));
+      if (p >= 1) { setVal(target); clearInterval(id); }
+    }, 30);
+    return () => clearInterval(id);
+  }, [target, duration]);
+  return val;
+}
+
+function Kpi({ label, value, num, fmt, accent, delay = 0 }) {
+  const animated = useCountUp(typeof num === 'number' ? num : 0);
+  const display = typeof num === 'number' ? (fmt ? fmt(animated) : Math.round(animated)) : value;
+  return (
+    <div className={'kpi reveal' + (accent ? ' kpi-accent' : '')} style={{ animationDelay: delay + 'ms' }}>
+      <div className="kpi-label">{label}</div>
+      <div className="kpi-value">{display}</div>
+    </div>
+  );
+}
+
+Object.assign(window, { useCountUp, Kpi });
+</script>
+
+<!-- avion -->
+<script type="text/babel">
+function ReporteAvion() {
+  const [exportState, setExportState] = React.useState('idle');
+
+  const totalHoras = VUELOS.reduce((s, v) => s + v.horas, 0);
+  const granTotal = VUELOS.reduce((s, v) => s + v.horas * v.costoHora, 0);
+  const promHora = granTotal / totalHoras;
+  const maxTotal = Math.max(...VUELOS.map((v) => v.horas * v.costoHora));
+
+  const handleExport = () => {
+    if (exportState === 'loading') return;
+    setExportState('loading');
+    setTimeout(() => {
+      setExportState('done');
+      setTimeout(() => setExportState('idle'), 2600);
+    }, 1500);
+  };
+
+  return (
+    <div className="module">
+      <div className="module-head">
+        <div>
+          <div className="eyebrow">Reporte ejecutivo · {AVION.periodo}</div>
+          <h1 className="module-title">Reporte de Avión</h1>
+          <p className="module-sub">
+            {AVION.modelo} · Matrícula <span className="mono">{AVION.matricula}</span> · Horas de vuelo rentadas
+          </p>
+        </div>
+        <button
+          className={'btn-primary' + (exportState === 'done' ? ' is-done' : '') + (exportState === 'loading' ? ' is-loading' : '')}
+          onClick={handleExport}
+          disabled={exportState === 'loading'}
+        >
+          {exportState === 'loading' && <span className="btn-progress" />}
+          <span className="btn-content">
+            {exportState === 'idle' && <><IconExcel /> Generar reporte</>}
+            {exportState === 'loading' && <>Generando reporte…</>}
+            {exportState === 'done' && <><IconCheck /> Reporte exportado</>}
+          </span>
+        </button>
+      </div>
+
+      <div className="kpi-row">
+        <Kpi label="Vuelos del periodo" num={VUELOS.length} delay={0} />
+        <Kpi label="Horas voladas" num={totalHoras} fmt={(v) => v.toFixed(1) + ' h'} delay={60} />
+        <Kpi label="Costo promedio / hora" num={promHora} fmt={MXN} delay={120} />
+        <Kpi label="Total facturado" num={granTotal} fmt={MXN} accent delay={180} />
+      </div>
+
+      <div className="card table-card">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Ruta</th>
+              <th className="col-wide">Trayecto</th>
+              <th className="num">Pax</th>
+              <th className="num">Horas</th>
+              <th className="num">Costo / hora</th>
+              <th className="num">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {VUELOS.map((v, i) => (
+              <tr key={v.id} className="reveal-row" style={{ animationDelay: 220 + i * 35 + 'ms' }}>
+                <td className="mono nowrap">{fmtDate(v.fecha)}</td>
+                <td><span className="route-pill">{v.ruta}</span></td>
+                <td className="muted col-wide">{v.origen} → {v.destino}</td>
+                <td className="num mono">{v.pasajeros}</td>
+                <td className="num mono">{v.horas.toFixed(1)}</td>
+                <td className="num mono">{MXN(v.costoHora)}</td>
+                <td className="num total-cell">
+                  <span className="mono strong">{MXN(v.horas * v.costoHora)}</span>
+                  <span className="cost-bar"><span className="cost-bar-fill" style={{ width: ((v.horas * v.costoHora) / maxTotal) * 100 + '%' }} /></span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colSpan={4}>Totales del periodo</td>
+              <td className="num mono strong">{totalHoras.toFixed(1)} h</td>
+              <td className="num muted">—</td>
+              <td className="num mono strong">{MXN(granTotal)}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+window.ReporteAvion = ReporteAvion;
+</script>
+
+<!-- servicios -->
+<script type="text/babel">
+function FilterGroup({ label, options, value, onChange }) {
+  return (
+    <div className="fg">
+      <span className="fg-label">{label}</span>
+      <div className="seg">
+        {options.map((o) => (
+          <button
+            key={o}
+            className={'seg-btn' + (value === o ? ' is-active' : '')}
+            onClick={() => onChange(o)}
+          >
+            {o}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ServicioCard({ s, idx = 0, onUpload }) {
+  const dias = daysUntil(s.vence);
+  const st = s.estatus.toLowerCase();
+  return (
+    <div className={'svc-card reveal svc-' + st} style={{ animationDelay: idx * 45 + 'ms' }}>
+      <div className="svc-top">
+        <div className={'svc-icon ico-' + s.servicio.toLowerCase()}>
+          <ServiceIcon tipo={s.servicio} />
+        </div>
+        <div className="svc-headtext">
+          <div className="svc-local">{s.servicio}</div>
+          <div className="svc-dir">{s.proveedor}</div>
+        </div>
+        <span className={'badge badge-' + st}>{s.estatus}</span>
+      </div>
+
+      <div className="svc-body">
+        <div className="svc-row">
+          <span className="svc-k">Vencimiento</span>
+          <span className="svc-v mono">
+            {fmtDate(s.vence)}
+            {s.estatus !== 'Pagado' && (
+              <span className={'svc-due ' + (dias < 0 ? 'due-late' : dias <= 7 ? 'due-soon' : 'due-ok')}>
+                {dias < 0 ? `${Math.abs(dias)} d. vencido` : dias === 0 ? 'vence hoy' : `en ${dias} d.`}
+              </span>
+            )}
+          </span>
+        </div>
+      </div>
+
+      <div className="svc-foot">
+        <div className="svc-monto mono">{MXN2(s.monto)}</div>
+        <button className="btn-ghost" onClick={onUpload}>
+          <IconUpload /> Subir recibo
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function Servicios() {
+  const [tipo, setTipo] = React.useState('Todos');
+  const [estatus, setEstatus] = React.useState('Todos');
+  const [toast, setToast] = React.useState(null);
+
+  const tipos = ['Todos', 'Luz', 'Agua', 'Gas'];
+  const estatuses = ['Todos', 'Pagado', 'Pendiente', 'Vencido'];
+
+  const filtrados = SERVICIOS.filter(
+    (s) => (tipo === 'Todos' || s.servicio === tipo) && (estatus === 'Todos' || s.estatus === estatus)
+  );
+
+  const totalPendiente = SERVICIOS.filter((s) => s.estatus !== 'Pagado').reduce((a, s) => a + s.monto, 0);
+  const totalVencido = SERVICIOS.filter((s) => s.estatus === 'Vencido').reduce((a, s) => a + s.monto, 0);
+  const countVencido = SERVICIOS.filter((s) => s.estatus === 'Vencido').length;
+
+  const subirRecibo = (s) => {
+    setToast(`Recibo de ${s.servicio} — ${s.local}`);
+    setTimeout(() => setToast(null), 2400);
+  };
+
+  const ordenLocales = [];
+  SERVICIOS.forEach((s) => { if (!ordenLocales.includes(s.local)) ordenLocales.push(s.local); });
+  const grupos = ordenLocales
+    .map((local) => {
+      const items = filtrados.filter((s) => s.local === local);
+      if (!items.length) return null;
+      return {
+        local,
+        direccion: items[0].direccion,
+        items,
+        porPagar: items.filter((s) => s.estatus !== 'Pagado').reduce((a, s) => a + s.monto, 0),
+        vencidos: items.filter((s) => s.estatus === 'Vencido').length,
+      };
+    })
+    .filter(Boolean);
+
+  return (
+    <div className="module">
+      <div className="module-head">
+        <div>
+          <div className="eyebrow">Pagos de servicios · Junio 2026</div>
+          <h1 className="module-title">Servicios</h1>
+          <p className="module-sub">Luz, agua y gas por local y negocio</p>
+        </div>
+      </div>
+
+      <div className="kpi-row">
+        <Kpi label="Recibos activos" num={SERVICIOS.length} delay={0} />
+        <Kpi label="Total por pagar" num={totalPendiente} fmt={MXN} delay={60} />
+        <Kpi label="Vencidos" value={`${countVencido} · ${MXN(totalVencido)}`} accent delay={120} />
+      </div>
+
+      <div className="filters">
+        <FilterGroup label="Servicio" options={tipos} value={tipo} onChange={setTipo} />
+        <FilterGroup label="Estatus" options={estatuses} value={estatus} onChange={setEstatus} />
+        <div className="filter-count">{filtrados.length} recibo{filtrados.length !== 1 ? 's' : ''}</div>
+      </div>
+
+      {grupos.map((g, gi) => (
+        <section className="svc-group" key={g.local}>
+          <header className="grp-head">
+            <div className="grp-id">
+              <h2 className="grp-name">{g.local}</h2>
+              <span className="grp-dir">{g.direccion}</span>
+            </div>
+            <div className="grp-stats">
+              <span className="grp-chip">{g.items.length} recibo{g.items.length !== 1 ? 's' : ''}</span>
+              {g.vencidos > 0 && (
+                <span className="grp-chip chip-alert">{g.vencidos} vencido{g.vencidos !== 1 ? 's' : ''}</span>
+              )}
+              <span className="grp-total">
+                <span className="grp-total-k">Por pagar</span>
+                <span className="grp-total-v mono">{g.porPagar > 0 ? MXN(g.porPagar) : '—'}</span>
+              </span>
+            </div>
+          </header>
+          <div className="cards-grid">
+            {g.items.map((s, i) => (
+              <ServicioCard key={s.id} s={s} idx={gi * 2 + i} onUpload={() => subirRecibo(s)} />
+            ))}
+          </div>
+        </section>
+      ))}
+      {filtrados.length === 0 && (
+        <div className="empty">Sin recibos para este filtro.</div>
+      )}
+
+      {toast && (
+        <div className="toast">
+          <IconUpload /> Subiendo: <strong>{toast}</strong>
+        </div>
+      )}
+    </div>
+  );
+}
+
+window.FilterGroup = FilterGroup;
+window.Servicios = Servicios;
+</script>
+
+<!-- seguros -->
+<script type="text/babel">
+function VencimientosTimeline({ data, sem }) {
+  const WINDOW = 90;
+  const [hover, setHover] = React.useState(null);
+  const dentro = data.filter((s) => daysUntil(s.vence) <= WINDOW);
+  const marks = [0, 15, 30, 45, 60, 75, 90];
+  return (
+    <div className="card timeline-card reveal" style={{ animationDelay: '220ms' }}>
+      <div className="tl-head">
+        <span className="tl-title">Próximos vencimientos · 90 días</span>
+        <span className="tl-hint">Pasa el cursor sobre cada póliza</span>
+      </div>
+      <div className="tl-track">
+        <div className="tl-line" />
+        {marks.map((m) => (
+          <div key={m} className="tl-tick" style={{ left: (m / WINDOW) * 100 + '%' }}>
+            <span className="tl-tickline" />
+            <span className="tl-ticklabel">{m === 0 ? 'Hoy' : '+' + m + 'd'}</span>
+          </div>
+        ))}
+        {dentro.map((s) => {
+          const dias = Math.max(daysUntil(s.vence), 0);
+          const color = sem(daysUntil(s.vence));
+          const left = (dias / WINDOW) * 100;
+          return (
+            <div
+              key={s.id}
+              className={'tl-mark mk-' + color}
+              style={{ left: left + '%' }}
+              onMouseEnter={() => setHover(s.id)}
+              onMouseLeave={() => setHover(null)}
+            >
+              {hover === s.id && (
+                <div className="tl-tip">
+                  <strong>{s.vehiculo}</strong>
+                  <span>{s.aseguradora} · {fmtDate(s.vence)}</span>
+                  <span className="mono">{daysUntil(s.vence) < 0 ? 'Vencida' : daysUntil(s.vence) + ' días'}</span>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function Seguros() {
+  const [filtro, setFiltro] = React.useState('Todos');
+  const filtros = ['Todos', 'Empresa', 'Personal'];
+
+  const data = [...SEGUROS].sort((a, b) => daysUntil(a.vence) - daysUntil(b.vence));
+  const filtrados = data.filter((s) => filtro === 'Todos' || s.tipo === filtro);
+
+  const totalPolizas = SEGUROS.length;
+  const primaMensual = SEGUROS.reduce((a, s) => a + s.prima, 0);
+  const prox30 = SEGUROS.filter((s) => daysUntil(s.vence) >= 0 && daysUntil(s.vence) <= 30).length;
+  const vencidas = SEGUROS.filter((s) => daysUntil(s.vence) < 0).length;
+
+  const sem = (dias) => (dias < 0 ? 'rojo' : dias <= 15 ? 'rojo' : dias <= 30 ? 'amarillo' : 'verde');
+
+  return (
+    <div className="module">
+      <div className="module-head">
+        <div>
+          <div className="eyebrow">Flotilla · Pólizas vigentes</div>
+          <h1 className="module-title">Seguros de Autos</h1>
+          <p className="module-sub">Control de vencimientos y primas de la flotilla</p>
+        </div>
+      </div>
+
+      <div className="kpi-row">
+        <Kpi label="Pólizas activas" num={totalPolizas} delay={0} />
+        <Kpi label="Prima mensual total" num={primaMensual} fmt={MXN} delay={60} />
+        <Kpi label="Vencen en 30 días" num={prox30} accent delay={120} />
+        <Kpi label="Vencidas" num={vencidas} delay={180} />
+      </div>
+
+      <VencimientosTimeline data={data} sem={sem} />
+
+      <div className="filters">
+        <FilterGroup label="Tipo" options={filtros} value={filtro} onChange={setFiltro} />
+        <div className="legend">
+          <span className="lg"><i className="dot dot-verde" /> Vigente</span>
+          <span className="lg"><i className="dot dot-amarillo" /> Próxima (≤30 d.)</span>
+          <span className="lg"><i className="dot dot-rojo" /> Crítica (≤15 d. / vencida)</span>
+        </div>
+      </div>
+
+      <div className="card table-card">
+        <table className="data-table seg-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Vehículo</th>
+              <th>Placas</th>
+              <th>Aseguradora</th>
+              <th>Tipo</th>
+              <th className="num">Prima mensual</th>
+              <th>Vence póliza</th>
+              <th className="num">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtrados.map((s, i) => {
+              const dias = daysUntil(s.vence);
+              const color = sem(dias);
+              return (
+                <tr key={s.id} className="reveal-row" style={{ animationDelay: 260 + i * 35 + 'ms' }}>
+                  <td className="seg-bar-cell"><span className={'seg-bar bar-' + color} /></td>
+                  <td className="strong nowrap">{s.vehiculo}</td>
+                  <td className="mono nowrap">{s.placas}</td>
+                  <td>{s.aseguradora}</td>
+                  <td>
+                    <span className={'tag tag-' + s.tipo.toLowerCase()}>{s.tipo}</span>
+                  </td>
+                  <td className="num mono">{MXN2(s.prima)}</td>
+                  <td className="mono nowrap">{fmtDate(s.vence)}</td>
+                  <td className="num">
+                    <span className={'due-chip chip-' + color}>
+                      {dias < 0 ? 'Vencida' : dias === 0 ? 'Hoy' : `${dias} ${dias === 1 ? 'día' : 'días'}`}
+                    </span>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+window.Seguros = Seguros;
+</script>
+
+<!-- calendario -->
+<script type="text/babel">
+const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const DIAS_SEM = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+
+function buildEventos() {
+  const ev = [];
+  SERVICIOS.forEach((s) => {
+    if (s.estatus === 'Pagado') return;
+    ev.push({
+      fecha: s.vence, tipo: 'servicio', subtipo: s.servicio,
+      titulo: `${s.servicio} · ${s.local}`,
+      detalle: `${s.proveedor} · ${MXN2(s.monto)}`,
+      estatus: s.estatus,
+    });
+  });
+  SEGUROS.forEach((s) => {
+    ev.push({
+      fecha: s.vence, tipo: 'seguro', subtipo: s.tipo,
+      titulo: `Póliza · ${s.vehiculo}`,
+      detalle: `${s.aseguradora} · ${s.placas}`,
+    });
+  });
+  VUELOS.forEach((v) => {
+    ev.push({
+      fecha: v.fecha, tipo: 'vuelo', subtipo: '',
+      titulo: `Vuelo ${v.ruta}`,
+      detalle: `${v.origen} → ${v.destino} · ${v.horas.toFixed(1)} h`,
+    });
+  });
+  return ev;
+}
+
+const TIPO_META = {
+  servicio: { label: 'Servicios', cls: 'ev-servicio' },
+  seguro: { label: 'Seguros', cls: 'ev-seguro' },
+  vuelo: { label: 'Vuelos', cls: 'ev-vuelo' },
+};
+
+function AgendaItem({ e, showDate }) {
+  const dias = daysUntil(e.fecha);
+  const urg = dias < 0 ? 'rojo' : dias <= 7 ? 'rojo' : dias <= 15 ? 'amarillo' : 'verde';
+  return (
+    <div className={'agenda-item ' + TIPO_META[e.tipo].cls}>
+      <span className="ag-bar" />
+      <div className="ag-body">
+        <div className="ag-title">{e.titulo}</div>
+        <div className="ag-detalle">{e.detalle}</div>
+      </div>
+      <div className="ag-right">
+        {showDate && <div className="ag-date mono">{fmtDateShort(e.fecha)}</div>}
+        <span className={'ag-chip chip-' + urg}>
+          {dias < 0 ? 'Vencido' : dias === 0 ? 'Hoy' : `${dias} d`}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function Calendario() {
+  const eventos = React.useMemo(buildEventos, []);
+  const [cursor, setCursor] = React.useState(() => new Date(HOY.getFullYear(), HOY.getMonth(), 1));
+  const [filtros, setFiltros] = React.useState({ servicio: true, seguro: true, vuelo: true });
+  const [sel, setSel] = React.useState(null);
+
+  const toISO = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const hoyISO = toISO(HOY);
+
+  const visibles = eventos.filter((e) => filtros[e.tipo]);
+  const porFecha = {};
+  visibles.forEach((e) => (porFecha[e.fecha] = porFecha[e.fecha] || []).push(e));
+
+  const year = cursor.getFullYear(), month = cursor.getMonth();
+  const primero = new Date(year, month, 1);
+  const offset = (primero.getDay() + 6) % 7;
+  const diasMes = new Date(year, month + 1, 0).getDate();
+
+  const celdas = [];
+  for (let i = 0; i < offset; i++) celdas.push(null);
+  for (let d = 1; d <= diasMes; d++) celdas.push(new Date(year, month, d));
+  while (celdas.length % 7 !== 0) celdas.push(null);
+
+  const cambiarMes = (delta) => { setSel(null); setCursor(new Date(year, month + delta, 1)); };
+  const toggle = (t) => setFiltros((f) => ({ ...f, [t]: !f[t] }));
+
+  const agenda = visibles
+    .filter((e) => { const dd = daysUntil(e.fecha); return dd >= 0 && dd <= 30; })
+    .sort((a, b) => a.fecha.localeCompare(b.fecha));
+
+  const selEventos = sel ? (porFecha[sel] || []) : null;
+
+  return (
+    <div className="module">
+      <div className="module-head">
+        <div>
+          <div className="eyebrow">Vista unificada · Pendientes</div>
+          <h1 className="module-title">Calendario</h1>
+          <p className="module-sub">Servicios, pólizas y vuelos en un solo lugar</p>
+        </div>
+        <div className="cal-legend">
+          {Object.entries(TIPO_META).map(([t, m]) => (
+            <button key={t} className={'leg-toggle ' + m.cls + (filtros[t] ? ' on' : '')} onClick={() => toggle(t)}>
+              <span className="leg-dot" /> {m.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="cal-wrap">
+        <div className="card cal-card">
+          <div className="cal-bar">
+            <button className="cal-nav" onClick={() => cambiarMes(-1)} aria-label="Mes anterior">‹</button>
+            <h2 className="cal-month">{MESES[month]} <span>{year}</span></h2>
+            <button className="cal-nav" onClick={() => cambiarMes(1)} aria-label="Mes siguiente">›</button>
+            <button className="cal-today" onClick={() => { setCursor(new Date(HOY.getFullYear(), HOY.getMonth(), 1)); setSel(null); }}>Hoy</button>
+          </div>
+
+          <div className="cal-grid cal-dow">
+            {DIAS_SEM.map((d) => <div key={d} className="dow">{d}</div>)}
+          </div>
+          <div className="cal-grid cal-days">
+            {celdas.map((d, i) => {
+              if (!d) return <div key={i} className="cal-cell empty-cell" />;
+              const iso = toISO(d);
+              const evs = porFecha[iso] || [];
+              const isHoy = iso === hoyISO;
+              const isSel = iso === sel;
+              return (
+                <button
+                  key={i}
+                  className={'cal-cell' + (isHoy ? ' is-hoy' : '') + (isSel ? ' is-sel' : '') + (evs.length ? ' has-ev' : '')}
+                  onClick={() => setSel(evs.length ? iso : null)}
+                >
+                  <span className="cell-num">{d.getDate()}</span>
+                  <span className="cell-evs">
+                    {evs.slice(0, 3).map((e, j) => (
+                      <span key={j} className={'ev-pill ' + TIPO_META[e.tipo].cls + (e.estatus === 'Vencido' ? ' is-vencido' : '')}>
+                        {e.titulo}
+                      </span>
+                    ))}
+                    {evs.length > 3 && <span className="ev-more">+{evs.length - 3} más</span>}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <aside className="cal-side">
+          {selEventos ? (
+            <div className="card side-card">
+              <div className="side-head">
+                <span>{fmtDate(sel)}</span>
+                <button className="side-close" onClick={() => setSel(null)}>Próximos ›</button>
+              </div>
+              <div className="side-list">
+                {selEventos.map((e, i) => <AgendaItem key={i} e={e} />)}
+              </div>
+            </div>
+          ) : (
+            <div className="card side-card">
+              <div className="side-head"><span>Próximos 30 días</span><span className="side-count">{agenda.length}</span></div>
+              <div className="side-list">
+                {agenda.length === 0 && <div className="side-empty">Sin pendientes en el rango.</div>}
+                {agenda.map((e, i) => <AgendaItem key={i} e={e} showDate />)}
+              </div>
+            </div>
+          )}
+        </aside>
+      </div>
+    </div>
+  );
+}
+
+window.Calendario = Calendario;
+</script>
+
+<!-- app -->
+<script type="text/babel">
+const TABS = [
+  { id: 'avion', label: 'Reporte de Avión', Icon: IconPlane, Comp: ReporteAvion },
+  { id: 'servicios', label: 'Servicios', Icon: IconBolt, Comp: Servicios },
+  { id: 'seguros', label: 'Seguros de Autos', Icon: IconShield, Comp: Seguros },
+  { id: 'calendario', label: 'Calendario', Icon: IconCalendar, Comp: Calendario },
+];
+
+function App() {
+  const [tab, setTab] = React.useState(() => localStorage.getItem('decsa-tab') || 'avion');
+  React.useEffect(() => { localStorage.setItem('decsa-tab', tab); }, [tab]);
+
+  const Active = TABS.find((t) => t.id === tab).Comp;
+
+  return (
+    <div className="app">
+      <header className="topbar">
+        <div className="brand">
+          <img src="assets/decsa-logo-white.png" alt="DECSA" className="logo" />
+          <span className="brand-div" />
+          <span className="brand-sub">Panel Operativo</span>
+        </div>
+        <div className="topbar-right">
+          <div className="period">Periodo activo · Junio 2026</div>
+          <div className="avatar">RA</div>
+        </div>
+      </header>
+
+      <nav className="tabs">
+        {TABS.map((t) => (
+          <button
+            key={t.id}
+            className={'tab' + (tab === t.id ? ' is-active' : '')}
+            onClick={() => setTab(t.id)}
+          >
+            <t.Icon /> <span>{t.label}</span>
+          </button>
+        ))}
+      </nav>
+
+      <main className="content">
+        <Active />
+      </main>
+
+      <footer className="footer">
+        DECSA · Panel Operativo interno — datos de demostración
+      </footer>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
