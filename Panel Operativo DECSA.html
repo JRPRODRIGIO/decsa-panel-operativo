@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Panel Operativo DECSA</title>
+<link rel="icon" type="image/png" href="assets/decsa-logo-white.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Libre+Franklin:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -65,8 +66,17 @@ body{
 .logo{height:30px;display:block;}
 .brand-div{width:1px;height:26px;background:rgba(255,255,255,.18);}
 .brand-sub{color:#fff;font-weight:600;font-size:15px;letter-spacing:.02em;opacity:.92;}
-.topbar-right{display:flex;align-items:center;gap:20px;}
-.period{color:rgba(255,255,255,.65);font-size:13px;font-weight:500;}
+.topbar-right{display:flex;align-items:center;gap:20px;position:relative;z-index:2;}
+.period-select{
+  appearance:none;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
+  color:rgba(255,255,255,.85);font-family:inherit;font-size:13px;font-weight:600;
+  padding:7px 28px 7px 12px;border-radius:8px;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.6)' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 8px center;
+  transition:background .14s;
+}
+.period-select:hover{background-color:rgba(255,255,255,.16);}
+.period-select option{background:var(--navy-800);color:#fff;}
 .avatar-wrap{display:flex;align-items:center;gap:10px;}
 .avatar{
   width:36px;height:36px;border-radius:50%;
@@ -74,6 +84,24 @@ body{
   display:flex;align-items:center;justify-content:center;letter-spacing:.04em;flex-shrink:0;
 }
 .avatar-name{color:rgba(255,255,255,.85);font-size:13px;font-weight:600;}
+
+/* ---------- Alert Banner ---------- */
+.alert-banner{
+  display:flex;align-items:center;gap:0;overflow-x:auto;
+  scrollbar-width:none;
+}
+.alert-banner::-webkit-scrollbar{display:none;}
+.alert-item{
+  display:flex;align-items:center;gap:9px;padding:10px 20px;
+  font-size:13px;font-weight:600;white-space:nowrap;border-right:1px solid rgba(0,0,0,.07);
+  cursor:default;transition:filter .14s;
+}
+.alert-item:last-child{border-right:0;}
+.alert-item:hover{filter:brightness(.96);}
+.alert-danger{background:var(--danger-bg);color:var(--danger);}
+.alert-warning{background:var(--amber-bg);color:var(--amber);}
+.alert-ok{background:var(--green-bg);color:var(--green);}
+.alert-dot{width:8px;height:8px;border-radius:50%;background:currentColor;flex-shrink:0;}
 
 /* ---------- Tabs ---------- */
 .tabs{
@@ -130,8 +158,22 @@ body{
   display:inline-flex;align-items:center;gap:7px;transition:background .15s,border-color .15s;
 }
 .btn-ghost:hover{background:var(--bg);border-color:#d5dde6;}
-.spinner{width:15px;height:15px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
+.btn-pagado{
+  appearance:none;cursor:pointer;font-family:inherit;font-weight:700;font-size:13px;
+  background:var(--green-bg);color:var(--green);border:1px solid var(--green);padding:8px 13px;border-radius:9px;
+  display:inline-flex;align-items:center;gap:7px;transition:all .15s;
+}
+.btn-pagado:hover{background:var(--green);color:#fff;}
+
+/* ---------- Search ---------- */
+.search-wrap{position:relative;flex:1;max-width:320px;}
+.search-input{
+  width:100%;background:#fff;border:1px solid var(--line);border-radius:10px;
+  font-family:inherit;font-size:13.5px;color:var(--ink);padding:9px 12px 9px 36px;
+  outline:none;transition:border-color .14s,box-shadow .14s;
+}
+.search-input:focus{border-color:#b0bec9;box-shadow:0 0 0 3px rgba(16,42,66,.06);}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--ink-3);pointer-events:none;}
 
 /* ---------- Tables ---------- */
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);}
@@ -153,8 +195,18 @@ body{
 .cost-bar-fill{display:block;height:100%;background:linear-gradient(90deg,var(--navy-700),var(--navy-800));border-radius:3px;}
 @media(max-width:980px){.col-wide{display:none;}}
 
+/* ---------- Notes input ---------- */
+.notes-input{
+  width:100%;min-width:140px;background:transparent;border:1px solid transparent;border-radius:7px;
+  font-family:inherit;font-size:13px;color:var(--ink-2);padding:6px 8px;
+  transition:border-color .14s,background .14s;resize:none;
+}
+.notes-input:focus{outline:none;border-color:var(--line);background:#fff;}
+.notes-input:hover:not(:focus){border-color:var(--line-2);background:#fafbfc;}
+.notes-input::placeholder{color:var(--ink-3);}
+
 /* ---------- Filters ---------- */
-.filters{display:flex;align-items:center;flex-wrap:wrap;gap:22px;margin-bottom:22px;}
+.filters{display:flex;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:22px;}
 .fg{display:flex;align-items:center;gap:11px;}
 .fg-label{font-size:12.5px;font-weight:700;color:var(--ink-3);}
 .seg{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px;}
@@ -179,7 +231,7 @@ body{
 
 /* ---------- Service cards ---------- */
 .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:18px;}
-.svc-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;display:flex;flex-direction:column;border-left:4px solid var(--line);}
+.svc-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;display:flex;flex-direction:column;border-left:4px solid var(--line);transition:opacity .3s,transform .3s;}
 .svc-pagado{border-left-color:var(--green);}
 .svc-pendiente{border-left-color:var(--amber);}
 .svc-vencido{border-left-color:var(--danger);}
@@ -207,10 +259,31 @@ body{
 .svc-monto{font-size:20px;font-weight:800;color:var(--navy-900);}
 .empty{grid-column:1/-1;text-align:center;color:var(--ink-3);padding:50px;background:#fff;border:1px dashed var(--line);border-radius:var(--radius);}
 
+/* ---------- Monthly Summary ---------- */
+.monthly-summary{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 24px;box-shadow:var(--shadow);margin-top:28px;}
+.ms-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.ms-title{font-family:"Archivo",sans-serif;font-size:14px;font-weight:700;color:var(--navy-900);}
+.ms-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;}
+.ms-col{display:flex;flex-direction:column;gap:4px;}
+.ms-label{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);}
+.ms-val{font-family:"Archivo",sans-serif;font-size:22px;font-weight:800;letter-spacing:-.02em;}
+.ms-pagado{color:var(--green);}
+.ms-pendiente{color:var(--amber);}
+.ms-vencido{color:var(--danger);}
+.ms-bar-track{height:8px;background:var(--line-2);border-radius:6px;overflow:hidden;display:flex;gap:2px;}
+.ms-bar-seg{height:100%;border-radius:6px;transition:width .6s cubic-bezier(.2,.7,.2,1);}
+
 /* ---------- Toast ---------- */
 .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--navy-900);color:#fff;padding:13px 20px;border-radius:11px;font-size:14px;display:flex;align-items:center;gap:9px;box-shadow:0 12px 32px rgba(12,31,51,.3);animation:rise .25s ease;z-index:50;}
 .toast strong{font-weight:700;}
+.toast-welcome{bottom:auto;top:86px;right:28px;left:auto;transform:none;max-width:340px;flex-direction:column;align-items:flex-start;gap:6px;animation:slideIn .3s cubic-bezier(.2,.7,.2,1);}
+.toast-welcome .tw-title{font-size:15px;font-weight:700;}
+.toast-welcome .tw-items{display:flex;flex-direction:column;gap:4px;width:100%;}
+.toast-welcome .tw-item{font-size:12.5px;color:rgba(255,255,255,.75);display:flex;align-items:center;gap:7px;}
+.toast-welcome .tw-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.toast-close{margin-left:auto;appearance:none;background:none;border:0;color:rgba(255,255,255,.5);cursor:pointer;font-size:18px;line-height:1;padding:0 0 0 8px;align-self:flex-start;}
 @keyframes rise{from{opacity:0;transform:translate(-50%,12px);}to{opacity:1;transform:translate(-50%,0);}}
+@keyframes slideIn{from{opacity:0;transform:translateX(16px);}to{opacity:1;transform:translateX(0);}}
 
 /* ---------- Seguros ---------- */
 .legend{display:flex;gap:18px;margin-left:auto;flex-wrap:wrap;}
@@ -283,7 +356,7 @@ body{
 .cal-nav:hover{background:var(--bg);}
 .cal-month{font-family:"Archivo",sans-serif;font-size:20px;font-weight:800;color:var(--navy-900);margin:0;letter-spacing:-.01em;}
 .cal-month span{color:var(--ink-3);font-weight:600;}
-.cal-today{margin-left:auto;appearance:none;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:700;color:var(--navy-800);background:#fff;border:1px solid var(--line);padding:8px 14px;border-radius:9px;transition:background .14px;}
+.cal-today{margin-left:auto;appearance:none;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:700;color:var(--navy-800);background:#fff;border:1px solid var(--line);padding:8px 14px;border-radius:9px;transition:background .14s;}
 .cal-today:hover{background:var(--bg);}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);}
 .cal-dow{margin-bottom:6px;}
@@ -313,7 +386,10 @@ body{
 .side-count{background:var(--navy-800);color:#fff;font-size:12px;font-weight:700;min-width:24px;height:24px;border-radius:12px;display:flex;align-items:center;justify-content:center;padding:0 7px;}
 .side-close{appearance:none;cursor:pointer;background:none;border:0;font-family:inherit;font-size:12.5px;font-weight:700;color:var(--red);}
 .side-list{display:flex;flex-direction:column;max-height:560px;overflow-y:auto;}
-.side-empty{padding:30px 18px;text-align:center;color:var(--ink-3);font-size:13px;}
+.side-empty{padding:40px 18px;text-align:center;color:var(--ink-3);font-size:13px;display:flex;flex-direction:column;align-items:center;gap:12px;}
+.side-empty-icon{font-size:32px;opacity:.4;}
+@keyframes floatUp{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+.side-empty-icon{animation:floatUp 2.8s ease-in-out infinite;}
 .agenda-item{display:flex;align-items:stretch;gap:11px;padding:12px 16px;border-bottom:1px solid var(--line-2);}
 .agenda-item:last-child{border-bottom:0;}
 .ag-bar{width:3px;border-radius:3px;flex-shrink:0;background:currentColor;}
@@ -336,7 +412,6 @@ body{
 
 <!-- data -->
 <script type="text/babel">
-// ===== DECSA — Datos ficticios (México) =====
 const MXN = (n) =>
   n.toLocaleString('es-MX', { style: 'currency', currency: 'MXN', minimumFractionDigits: 0, maximumFractionDigits: 0 });
 const MXN2 = (n) =>
@@ -352,11 +427,7 @@ const fmtDateShort = (iso) => {
 const HOY = new Date('2026-06-08T00:00:00');
 const daysUntil = (iso) => Math.round((new Date(iso + 'T00:00:00') - HOY) / 86400000);
 
-const AVION = {
-  matricula: 'XA-DEC',
-  modelo: 'Cessna Citation CJ3+',
-  periodo: 'Mayo 2026',
-};
+const AVION = { matricula: 'XA-DEC', modelo: 'Cessna Citation CJ3+', periodo: 'Mayo 2026' };
 const VUELOS = [
   { id: 1, fecha: '2026-05-02', ruta: 'MTY → MEX', origen: 'Monterrey', destino: 'Ciudad de México', horas: 1.6, costoHora: 92000, pasajeros: 4 },
   { id: 2, fecha: '2026-05-05', ruta: 'MEX → MTY', origen: 'Ciudad de México', destino: 'Monterrey', horas: 1.7, costoHora: 92000, pasajeros: 4 },
@@ -369,8 +440,7 @@ const VUELOS = [
   { id: 9, fecha: '2026-05-27', ruta: 'TLC → SJD', origen: 'Toluca', destino: 'Los Cabos', horas: 2.1, costoHora: 98000, pasajeros: 7 },
   { id: 10, fecha: '2026-05-30', ruta: 'SJD → MTY', origen: 'Los Cabos', destino: 'Monterrey', horas: 2.3, costoHora: 98000, pasajeros: 7 },
 ];
-
-const SERVICIOS = [
+const SERVICIOS_BASE = [
   { id: 1, local: 'Local Garza Sada', direccion: 'Av. Eugenio Garza Sada 2110, Monterrey', servicio: 'Luz', proveedor: 'CFE', monto: 18450, vence: '2026-06-12', estatus: 'Pendiente' },
   { id: 2, local: 'Local Garza Sada', direccion: 'Av. Eugenio Garza Sada 2110, Monterrey', servicio: 'Agua', proveedor: 'Agua y Drenaje de Monterrey', monto: 3240, vence: '2026-06-20', estatus: 'Pendiente' },
   { id: 3, local: 'Oficina Centro', direccion: 'Padre Mier 320, Centro, Monterrey', servicio: 'Luz', proveedor: 'CFE', monto: 12980, vence: '2026-05-28', estatus: 'Vencido' },
@@ -384,8 +454,7 @@ const SERVICIOS = [
   { id: 11, local: 'Planta Apodaca', direccion: 'Parque Ind. Stiva, Apodaca', servicio: 'Luz', proveedor: 'CFE', monto: 68400, vence: '2026-06-10', estatus: 'Pendiente' },
   { id: 12, local: 'Planta Apodaca', direccion: 'Parque Ind. Stiva, Apodaca', servicio: 'Gas', proveedor: 'Naturgy', monto: 12350, vence: '2026-05-27', estatus: 'Pagado' },
 ];
-
-const SEGUROS = [
+const SEGUROS_BASE = [
   { id: 1, vehiculo: 'Toyota Hilux 2024', placas: 'SXA-15-21', aseguradora: 'Qualitas', tipo: 'Empresa', prima: 2180, vence: '2026-06-09' },
   { id: 2, vehiculo: 'Nissan NP300 2023', placas: 'SVT-88-04', aseguradora: 'GNP', tipo: 'Empresa', prima: 1950, vence: '2026-06-21' },
   { id: 3, vehiculo: 'VW Jetta 2022', placas: 'SPM-42-77', aseguradora: 'AXA', tipo: 'Personal', prima: 1420, vence: '2026-07-14' },
@@ -399,41 +468,27 @@ const SEGUROS = [
   { id: 11, vehiculo: 'RAM 1500 2025', placas: 'SXE-77-83', aseguradora: 'HDI', tipo: 'Empresa', prima: 3180, vence: '2026-08-19' },
 ];
 
-Object.assign(window, { MXN, MXN2, fmtDate, fmtDateShort, HOY, daysUntil, AVION, VUELOS, SERVICIOS, SEGUROS });
+Object.assign(window, { MXN, MXN2, fmtDate, fmtDateShort, HOY, daysUntil, AVION, VUELOS, SERVICIOS_BASE, SEGUROS_BASE });
 </script>
 
 <!-- icons -->
 <script type="text/babel">
 const S = { fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round' };
-
-function IconPlane() {
-  return <svg viewBox="0 0 24 24" width="18" height="18" {...S}><path d="M3.5 13.5 21 5l-3.5 8.5L21 22l-4.5-2.5L12 21l-1-4.5L3.5 13.5Z"/></svg>;
-}
-function IconBolt() {
-  return <svg viewBox="0 0 24 24" width="18" height="18" {...S}><path d="M13 3 4 14h6l-1 7 9-11h-6l1-7Z"/></svg>;
-}
-function IconShield() {
-  return <svg viewBox="0 0 24 24" width="18" height="18" {...S}><path d="M12 3 5 6v5c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6l-7-3Z"/></svg>;
-}
-function IconCalendar() {
-  return <svg viewBox="0 0 24 24" width="18" height="18" {...S}><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 9.5h17M8 3.5v3M16 3.5v3"/></svg>;
-}
-function IconExcel() {
-  return <svg viewBox="0 0 24 24" width="16" height="16" {...S}><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8l-5-5Z"/><path d="M14 3v5h5"/><path d="m9.5 12 5 5m0-5-5 5"/></svg>;
-}
-function IconCheck() {
-  return <svg viewBox="0 0 24 24" width="16" height="16" {...S}><path d="m5 13 4 4L19 7"/></svg>;
-}
-function IconUpload() {
-  return <svg viewBox="0 0 24 24" width="15" height="15" {...S}><path d="M12 16V5m0 0L8 9m4-4 4 4"/><path d="M5 19h14"/></svg>;
-}
+function IconPlane() { return <svg viewBox="0 0 24 24" width="18" height="18" {...S}><path d="M3.5 13.5 21 5l-3.5 8.5L21 22l-4.5-2.5L12 21l-1-4.5L3.5 13.5Z"/></svg>; }
+function IconBolt() { return <svg viewBox="0 0 24 24" width="18" height="18" {...S}><path d="M13 3 4 14h6l-1 7 9-11h-6l1-7Z"/></svg>; }
+function IconShield() { return <svg viewBox="0 0 24 24" width="18" height="18" {...S}><path d="M12 3 5 6v5c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6l-7-3Z"/></svg>; }
+function IconCalendar() { return <svg viewBox="0 0 24 24" width="18" height="18" {...S}><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 9.5h17M8 3.5v3M16 3.5v3"/></svg>; }
+function IconExcel() { return <svg viewBox="0 0 24 24" width="16" height="16" {...S}><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8l-5-5Z"/><path d="M14 3v5h5"/><path d="m9.5 12 5 5m0-5-5 5"/></svg>; }
+function IconCheck() { return <svg viewBox="0 0 24 24" width="16" height="16" {...S}><path d="m5 13 4 4L19 7"/></svg>; }
+function IconUpload() { return <svg viewBox="0 0 24 24" width="15" height="15" {...S}><path d="M12 16V5m0 0L8 9m4-4 4 4"/><path d="M5 19h14"/></svg>; }
+function IconSearch() { return <svg viewBox="0 0 24 24" width="15" height="15" {...S}><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>; }
+function IconBell() { return <svg viewBox="0 0 24 24" width="16" height="16" {...S}><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>; }
 function ServiceIcon({ tipo }) {
   if (tipo === 'Luz') return <svg viewBox="0 0 24 24" width="20" height="20" {...S}><path d="M13 3 4 14h6l-1 7 9-11h-6l1-7Z"/></svg>;
   if (tipo === 'Agua') return <svg viewBox="0 0 24 24" width="20" height="20" {...S}><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/></svg>;
   return <svg viewBox="0 0 24 24" width="20" height="20" {...S}><path d="M9 3h6v4l2 2v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V9l2-2V3Z"/><path d="M7 12h10"/></svg>;
 }
-
-Object.assign(window, { IconPlane, IconBolt, IconShield, IconCalendar, IconExcel, IconCheck, IconUpload, ServiceIcon });
+Object.assign(window, { IconPlane, IconBolt, IconShield, IconCalendar, IconExcel, IconCheck, IconUpload, IconSearch, IconBell, ServiceIcon });
 </script>
 
 <!-- util -->
@@ -465,14 +520,26 @@ function Kpi({ label, value, num, fmt, accent, delay = 0 }) {
   );
 }
 
-Object.assign(window, { useCountUp, Kpi });
+function FilterGroup({ label, options, value, onChange }) {
+  return (
+    <div className="fg">
+      <span className="fg-label">{label}</span>
+      <div className="seg">
+        {options.map((o) => (
+          <button key={o} className={'seg-btn' + (value === o ? ' is-active' : '')} onClick={() => onChange(o)}>{o}</button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+Object.assign(window, { useCountUp, Kpi, FilterGroup });
 </script>
 
 <!-- avion -->
 <script type="text/babel">
-function ReporteAvion() {
+function ReporteAvion({ periodo }) {
   const [exportState, setExportState] = React.useState('idle');
-
   const totalHoras = VUELOS.reduce((s, v) => s + v.horas, 0);
   const granTotal = VUELOS.reduce((s, v) => s + v.horas * v.costoHora, 0);
   const promHora = granTotal / totalHoras;
@@ -481,10 +548,7 @@ function ReporteAvion() {
   const handleExport = () => {
     if (exportState === 'loading') return;
     setExportState('loading');
-    setTimeout(() => {
-      setExportState('done');
-      setTimeout(() => setExportState('idle'), 2600);
-    }, 1500);
+    setTimeout(() => { setExportState('done'); setTimeout(() => setExportState('idle'), 2600); }, 1500);
   };
 
   return (
@@ -493,14 +557,11 @@ function ReporteAvion() {
         <div>
           <div className="eyebrow">Reporte ejecutivo · {AVION.periodo}</div>
           <h1 className="module-title">Reporte de Avión</h1>
-          <p className="module-sub">
-            {AVION.modelo} · Matrícula <span className="mono">{AVION.matricula}</span> · Horas de vuelo rentadas
-          </p>
+          <p className="module-sub">{AVION.modelo} · Matrícula <span className="mono">{AVION.matricula}</span> · Horas de vuelo rentadas</p>
         </div>
         <button
           className={'btn-primary' + (exportState === 'done' ? ' is-done' : '') + (exportState === 'loading' ? ' is-loading' : '')}
-          onClick={handleExport}
-          disabled={exportState === 'loading'}
+          onClick={handleExport} disabled={exportState === 'loading'}
         >
           {exportState === 'loading' && <span className="btn-progress" />}
           <span className="btn-content">
@@ -510,25 +571,19 @@ function ReporteAvion() {
           </span>
         </button>
       </div>
-
       <div className="kpi-row">
         <Kpi label="Vuelos del periodo" num={VUELOS.length} delay={0} />
         <Kpi label="Horas voladas" num={totalHoras} fmt={(v) => v.toFixed(1) + ' h'} delay={60} />
         <Kpi label="Costo promedio / hora" num={promHora} fmt={MXN} delay={120} />
         <Kpi label="Total facturado" num={granTotal} fmt={MXN} accent delay={180} />
       </div>
-
       <div className="card table-card">
         <table className="data-table">
           <thead>
             <tr>
-              <th>Fecha</th>
-              <th>Ruta</th>
-              <th className="col-wide">Trayecto</th>
-              <th className="num">Pax</th>
-              <th className="num">Horas</th>
-              <th className="num">Costo / hora</th>
-              <th className="num">Total</th>
+              <th>Fecha</th><th>Ruta</th><th className="col-wide">Trayecto</th>
+              <th className="num">Pax</th><th className="num">Horas</th>
+              <th className="num">Costo / hora</th><th className="num">Total</th>
             </tr>
           </thead>
           <tbody>
@@ -560,47 +615,24 @@ function ReporteAvion() {
     </div>
   );
 }
-
 window.ReporteAvion = ReporteAvion;
 </script>
 
 <!-- servicios -->
 <script type="text/babel">
-function FilterGroup({ label, options, value, onChange }) {
-  return (
-    <div className="fg">
-      <span className="fg-label">{label}</span>
-      <div className="seg">
-        {options.map((o) => (
-          <button
-            key={o}
-            className={'seg-btn' + (value === o ? ' is-active' : '')}
-            onClick={() => onChange(o)}
-          >
-            {o}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ServicioCard({ s, idx = 0, onUpload }) {
+function ServicioCard({ s, idx = 0, onUpload, onMarcarPagado }) {
   const dias = daysUntil(s.vence);
   const st = s.estatus.toLowerCase();
   return (
     <div className={'svc-card reveal svc-' + st} style={{ animationDelay: idx * 45 + 'ms' }}>
       <div className="svc-top">
-        <div className={'svc-icon ico-' + s.servicio.toLowerCase()}>
-          <ServiceIcon tipo={s.servicio} />
-        </div>
+        <div className={'svc-icon ico-' + s.servicio.toLowerCase()}><ServiceIcon tipo={s.servicio} /></div>
         <div className="svc-headtext">
           <div className="svc-local">{s.servicio}</div>
           <div className="svc-dir">{s.proveedor}</div>
         </div>
         <span className={'badge badge-' + st}>{s.estatus}</span>
       </div>
-
       <div className="svc-body">
         <div className="svc-row">
           <span className="svc-k">Vencimiento</span>
@@ -614,32 +646,71 @@ function ServicioCard({ s, idx = 0, onUpload }) {
           </span>
         </div>
       </div>
-
       <div className="svc-foot">
         <div className="svc-monto mono">{MXN2(s.monto)}</div>
-        <button className="btn-ghost" onClick={onUpload}>
-          <IconUpload /> Subir recibo
-        </button>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          {s.estatus !== 'Pagado' && (
+            <button className="btn-pagado" onClick={() => onMarcarPagado(s.id)}>
+              <IconCheck /> Pagado
+            </button>
+          )}
+          <button className="btn-ghost" onClick={() => onUpload(s)}>
+            <IconUpload /> Recibo
+          </button>
+        </div>
       </div>
     </div>
   );
 }
 
-function Servicios() {
+function MonthlySummary({ servicios }) {
+  const pagado = servicios.filter((s) => s.estatus === 'Pagado').reduce((a, s) => a + s.monto, 0);
+  const pendiente = servicios.filter((s) => s.estatus === 'Pendiente').reduce((a, s) => a + s.monto, 0);
+  const vencido = servicios.filter((s) => s.estatus === 'Vencido').reduce((a, s) => a + s.monto, 0);
+  const total = pagado + pendiente + vencido || 1;
+  return (
+    <div className="monthly-summary reveal" style={{ animationDelay: '300ms' }}>
+      <div className="ms-head">
+        <span className="ms-title">Resumen del mes · Junio 2026</span>
+        <span style={{ fontSize: '13px', color: 'var(--ink-3)', fontWeight: 600 }}>Total: <span className="mono" style={{ color: 'var(--navy-900)' }}>{MXN(pagado + pendiente + vencido)}</span></span>
+      </div>
+      <div className="ms-cols">
+        <div className="ms-col">
+          <span className="ms-label">Pagado</span>
+          <span className="ms-val ms-pagado mono">{MXN(pagado)}</span>
+        </div>
+        <div className="ms-col">
+          <span className="ms-label">Pendiente</span>
+          <span className="ms-val ms-pendiente mono">{MXN(pendiente)}</span>
+        </div>
+        <div className="ms-col">
+          <span className="ms-label">Vencido</span>
+          <span className="ms-val ms-vencido mono">{MXN(vencido)}</span>
+        </div>
+      </div>
+      <div className="ms-bar-track">
+        <div className="ms-bar-seg" style={{ width: (pagado / total * 100) + '%', background: 'var(--green)' }} />
+        <div className="ms-bar-seg" style={{ width: (pendiente / total * 100) + '%', background: 'var(--amber)' }} />
+        <div className="ms-bar-seg" style={{ width: (vencido / total * 100) + '%', background: 'var(--danger)' }} />
+      </div>
+    </div>
+  );
+}
+
+function Servicios({ servicios, onMarcarPagado }) {
   const [tipo, setTipo] = React.useState('Todos');
   const [estatus, setEstatus] = React.useState('Todos');
+  const [busqueda, setBusqueda] = React.useState('');
   const [toast, setToast] = React.useState(null);
 
   const tipos = ['Todos', 'Luz', 'Agua', 'Gas'];
   const estatuses = ['Todos', 'Pagado', 'Pendiente', 'Vencido'];
 
-  const filtrados = SERVICIOS.filter(
-    (s) => (tipo === 'Todos' || s.servicio === tipo) && (estatus === 'Todos' || s.estatus === estatus)
+  const filtrados = servicios.filter((s) =>
+    (tipo === 'Todos' || s.servicio === tipo) &&
+    (estatus === 'Todos' || s.estatus === estatus) &&
+    (busqueda === '' || s.local.toLowerCase().includes(busqueda.toLowerCase()) || s.proveedor.toLowerCase().includes(busqueda.toLowerCase()))
   );
-
-  const totalPendiente = SERVICIOS.filter((s) => s.estatus !== 'Pagado').reduce((a, s) => a + s.monto, 0);
-  const totalVencido = SERVICIOS.filter((s) => s.estatus === 'Vencido').reduce((a, s) => a + s.monto, 0);
-  const countVencido = SERVICIOS.filter((s) => s.estatus === 'Vencido').length;
 
   const subirRecibo = (s) => {
     setToast(`Recibo de ${s.servicio} — ${s.local}`);
@@ -647,20 +718,16 @@ function Servicios() {
   };
 
   const ordenLocales = [];
-  SERVICIOS.forEach((s) => { if (!ordenLocales.includes(s.local)) ordenLocales.push(s.local); });
-  const grupos = ordenLocales
-    .map((local) => {
-      const items = filtrados.filter((s) => s.local === local);
-      if (!items.length) return null;
-      return {
-        local,
-        direccion: items[0].direccion,
-        items,
-        porPagar: items.filter((s) => s.estatus !== 'Pagado').reduce((a, s) => a + s.monto, 0),
-        vencidos: items.filter((s) => s.estatus === 'Vencido').length,
-      };
-    })
-    .filter(Boolean);
+  SERVICIOS_BASE.forEach((s) => { if (!ordenLocales.includes(s.local)) ordenLocales.push(s.local); });
+  const grupos = ordenLocales.map((local) => {
+    const items = filtrados.filter((s) => s.local === local);
+    if (!items.length) return null;
+    return {
+      local, direccion: items[0].direccion, items,
+      porPagar: items.filter((s) => s.estatus !== 'Pagado').reduce((a, s) => a + s.monto, 0),
+      vencidos: items.filter((s) => s.estatus === 'Vencido').length,
+    };
+  }).filter(Boolean);
 
   return (
     <div className="module">
@@ -671,16 +738,19 @@ function Servicios() {
           <p className="module-sub">Luz, agua y gas por local y negocio</p>
         </div>
       </div>
-
       <div className="kpi-row">
-        <Kpi label="Recibos activos" num={SERVICIOS.length} delay={0} />
-        <Kpi label="Total por pagar" num={totalPendiente} fmt={MXN} delay={60} />
-        <Kpi label="Vencidos" value={`${countVencido} · ${MXN(totalVencido)}`} accent delay={120} />
+        <Kpi label="Recibos activos" num={servicios.length} delay={0} />
+        <Kpi label="Total por pagar" num={servicios.filter((s) => s.estatus !== 'Pagado').reduce((a, s) => a + s.monto, 0)} fmt={MXN} delay={60} />
+        <Kpi label="Vencidos" value={`${servicios.filter((s) => s.estatus === 'Vencido').length} · ${MXN(servicios.filter((s) => s.estatus === 'Vencido').reduce((a, s) => a + s.monto, 0))}`} accent delay={120} />
       </div>
 
       <div className="filters">
         <FilterGroup label="Servicio" options={tipos} value={tipo} onChange={setTipo} />
         <FilterGroup label="Estatus" options={estatuses} value={estatus} onChange={setEstatus} />
+        <div className="search-wrap">
+          <span className="search-icon"><IconSearch /></span>
+          <input className="search-input" placeholder="Buscar local o proveedor…" value={busqueda} onChange={(e) => setBusqueda(e.target.value)} />
+        </div>
         <div className="filter-count">{filtrados.length} recibo{filtrados.length !== 1 ? 's' : ''}</div>
       </div>
 
@@ -693,9 +763,7 @@ function Servicios() {
             </div>
             <div className="grp-stats">
               <span className="grp-chip">{g.items.length} recibo{g.items.length !== 1 ? 's' : ''}</span>
-              {g.vencidos > 0 && (
-                <span className="grp-chip chip-alert">{g.vencidos} vencido{g.vencidos !== 1 ? 's' : ''}</span>
-              )}
+              {g.vencidos > 0 && <span className="grp-chip chip-alert">{g.vencidos} vencido{g.vencidos !== 1 ? 's' : ''}</span>}
               <span className="grp-total">
                 <span className="grp-total-k">Por pagar</span>
                 <span className="grp-total-v mono">{g.porPagar > 0 ? MXN(g.porPagar) : '—'}</span>
@@ -704,25 +772,21 @@ function Servicios() {
           </header>
           <div className="cards-grid">
             {g.items.map((s, i) => (
-              <ServicioCard key={s.id} s={s} idx={gi * 2 + i} onUpload={() => subirRecibo(s)} />
+              <ServicioCard key={s.id} s={s} idx={gi * 2 + i} onUpload={subirRecibo} onMarcarPagado={onMarcarPagado} />
             ))}
           </div>
         </section>
       ))}
-      {filtrados.length === 0 && (
-        <div className="empty">Sin recibos para este filtro.</div>
-      )}
+      {filtrados.length === 0 && <div className="empty">Sin recibos para este filtro.</div>}
+
+      <MonthlySummary servicios={servicios} />
 
       {toast && (
-        <div className="toast">
-          <IconUpload /> Subiendo: <strong>{toast}</strong>
-        </div>
+        <div className="toast"><IconUpload /> Subiendo: <strong>{toast}</strong></div>
       )}
     </div>
   );
 }
-
-window.FilterGroup = FilterGroup;
 window.Servicios = Servicios;
 </script>
 
@@ -743,22 +807,15 @@ function VencimientosTimeline({ data, sem }) {
         <div className="tl-line" />
         {marks.map((m) => (
           <div key={m} className="tl-tick" style={{ left: (m / WINDOW) * 100 + '%' }}>
-            <span className="tl-tickline" />
-            <span className="tl-ticklabel">{m === 0 ? 'Hoy' : '+' + m + 'd'}</span>
+            <span className="tl-tickline" /><span className="tl-ticklabel">{m === 0 ? 'Hoy' : '+' + m + 'd'}</span>
           </div>
         ))}
         {dentro.map((s) => {
           const dias = Math.max(daysUntil(s.vence), 0);
           const color = sem(daysUntil(s.vence));
-          const left = (dias / WINDOW) * 100;
           return (
-            <div
-              key={s.id}
-              className={'tl-mark mk-' + color}
-              style={{ left: left + '%' }}
-              onMouseEnter={() => setHover(s.id)}
-              onMouseLeave={() => setHover(null)}
-            >
+            <div key={s.id} className={'tl-mark mk-' + color} style={{ left: (dias / WINDOW) * 100 + '%' }}
+              onMouseEnter={() => setHover(s.id)} onMouseLeave={() => setHover(null)}>
               {hover === s.id && (
                 <div className="tl-tip">
                   <strong>{s.vehiculo}</strong>
@@ -776,16 +833,20 @@ function VencimientosTimeline({ data, sem }) {
 
 function Seguros() {
   const [filtro, setFiltro] = React.useState('Todos');
+  const [busqueda, setBusqueda] = React.useState('');
+  const [notas, setNotas] = React.useState({});
   const filtros = ['Todos', 'Empresa', 'Personal'];
 
-  const data = [...SEGUROS].sort((a, b) => daysUntil(a.vence) - daysUntil(b.vence));
-  const filtrados = data.filter((s) => filtro === 'Todos' || s.tipo === filtro);
+  const data = [...SEGUROS_BASE].sort((a, b) => daysUntil(a.vence) - daysUntil(b.vence));
+  const filtrados = data.filter((s) =>
+    (filtro === 'Todos' || s.tipo === filtro) &&
+    (busqueda === '' || s.vehiculo.toLowerCase().includes(busqueda.toLowerCase()) || s.aseguradora.toLowerCase().includes(busqueda.toLowerCase()) || s.placas.toLowerCase().includes(busqueda.toLowerCase()))
+  );
 
-  const totalPolizas = SEGUROS.length;
-  const primaMensual = SEGUROS.reduce((a, s) => a + s.prima, 0);
-  const prox30 = SEGUROS.filter((s) => daysUntil(s.vence) >= 0 && daysUntil(s.vence) <= 30).length;
-  const vencidas = SEGUROS.filter((s) => daysUntil(s.vence) < 0).length;
-
+  const totalPolizas = SEGUROS_BASE.length;
+  const primaMensual = SEGUROS_BASE.reduce((a, s) => a + s.prima, 0);
+  const prox30 = SEGUROS_BASE.filter((s) => daysUntil(s.vence) >= 0 && daysUntil(s.vence) <= 30).length;
+  const vencidas = SEGUROS_BASE.filter((s) => daysUntil(s.vence) < 0).length;
   const sem = (dias) => (dias < 0 ? 'rojo' : dias <= 15 ? 'rojo' : dias <= 30 ? 'amarillo' : 'verde');
 
   return (
@@ -797,37 +858,32 @@ function Seguros() {
           <p className="module-sub">Control de vencimientos y primas de la flotilla</p>
         </div>
       </div>
-
       <div className="kpi-row">
         <Kpi label="Pólizas activas" num={totalPolizas} delay={0} />
         <Kpi label="Prima mensual total" num={primaMensual} fmt={MXN} delay={60} />
         <Kpi label="Vencen en 30 días" num={prox30} accent delay={120} />
         <Kpi label="Vencidas" num={vencidas} delay={180} />
       </div>
-
       <VencimientosTimeline data={data} sem={sem} />
-
       <div className="filters">
         <FilterGroup label="Tipo" options={filtros} value={filtro} onChange={setFiltro} />
+        <div className="search-wrap">
+          <span className="search-icon"><IconSearch /></span>
+          <input className="search-input" placeholder="Buscar vehículo, placas o aseguradora…" value={busqueda} onChange={(e) => setBusqueda(e.target.value)} />
+        </div>
         <div className="legend">
           <span className="lg"><i className="dot dot-verde" /> Vigente</span>
           <span className="lg"><i className="dot dot-amarillo" /> Próxima (≤30 d.)</span>
           <span className="lg"><i className="dot dot-rojo" /> Crítica (≤15 d. / vencida)</span>
         </div>
       </div>
-
       <div className="card table-card">
         <table className="data-table seg-table">
           <thead>
             <tr>
-              <th></th>
-              <th>Vehículo</th>
-              <th>Placas</th>
-              <th>Aseguradora</th>
-              <th>Tipo</th>
-              <th className="num">Prima mensual</th>
-              <th>Vence póliza</th>
-              <th className="num">Estado</th>
+              <th></th><th>Vehículo</th><th>Placas</th><th>Aseguradora</th><th>Tipo</th>
+              <th className="num">Prima mensual</th><th>Vence póliza</th><th className="num">Estado</th>
+              <th>Notas</th>
             </tr>
           </thead>
           <tbody>
@@ -840,15 +896,22 @@ function Seguros() {
                   <td className="strong nowrap">{s.vehiculo}</td>
                   <td className="mono nowrap">{s.placas}</td>
                   <td>{s.aseguradora}</td>
-                  <td>
-                    <span className={'tag tag-' + s.tipo.toLowerCase()}>{s.tipo}</span>
-                  </td>
+                  <td><span className={'tag tag-' + s.tipo.toLowerCase()}>{s.tipo}</span></td>
                   <td className="num mono">{MXN2(s.prima)}</td>
                   <td className="mono nowrap">{fmtDate(s.vence)}</td>
                   <td className="num">
                     <span className={'due-chip chip-' + color}>
                       {dias < 0 ? 'Vencida' : dias === 0 ? 'Hoy' : `${dias} ${dias === 1 ? 'día' : 'días'}`}
                     </span>
+                  </td>
+                  <td>
+                    <textarea
+                      className="notes-input"
+                      rows={1}
+                      placeholder="Agregar nota…"
+                      value={notas[s.id] || ''}
+                      onChange={(e) => setNotas((n) => ({ ...n, [s.id]: e.target.value }))}
+                    />
                   </td>
                 </tr>
               );
@@ -859,7 +922,6 @@ function Seguros() {
     </div>
   );
 }
-
 window.Seguros = Seguros;
 </script>
 
@@ -868,30 +930,17 @@ window.Seguros = Seguros;
 const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const DIAS_SEM = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
 
-function buildEventos() {
+function buildEventos(servicios) {
   const ev = [];
-  SERVICIOS.forEach((s) => {
+  servicios.forEach((s) => {
     if (s.estatus === 'Pagado') return;
-    ev.push({
-      fecha: s.vence, tipo: 'servicio', subtipo: s.servicio,
-      titulo: `${s.servicio} · ${s.local}`,
-      detalle: `${s.proveedor} · ${MXN2(s.monto)}`,
-      estatus: s.estatus,
-    });
+    ev.push({ fecha: s.vence, tipo: 'servicio', subtipo: s.servicio, titulo: `${s.servicio} · ${s.local}`, detalle: `${s.proveedor} · ${MXN2(s.monto)}`, estatus: s.estatus });
   });
-  SEGUROS.forEach((s) => {
-    ev.push({
-      fecha: s.vence, tipo: 'seguro', subtipo: s.tipo,
-      titulo: `Póliza · ${s.vehiculo}`,
-      detalle: `${s.aseguradora} · ${s.placas}`,
-    });
+  SEGUROS_BASE.forEach((s) => {
+    ev.push({ fecha: s.vence, tipo: 'seguro', subtipo: s.tipo, titulo: `Póliza · ${s.vehiculo}`, detalle: `${s.aseguradora} · ${s.placas}` });
   });
   VUELOS.forEach((v) => {
-    ev.push({
-      fecha: v.fecha, tipo: 'vuelo', subtipo: '',
-      titulo: `Vuelo ${v.ruta}`,
-      detalle: `${v.origen} → ${v.destino} · ${v.horas.toFixed(1)} h`,
-    });
+    ev.push({ fecha: v.fecha, tipo: 'vuelo', subtipo: '', titulo: `Vuelo ${v.ruta}`, detalle: `${v.origen} → ${v.destino} · ${v.horas.toFixed(1)} h` });
   });
   return ev;
 }
@@ -914,23 +963,20 @@ function AgendaItem({ e, showDate }) {
       </div>
       <div className="ag-right">
         {showDate && <div className="ag-date mono">{fmtDateShort(e.fecha)}</div>}
-        <span className={'ag-chip chip-' + urg}>
-          {dias < 0 ? 'Vencido' : dias === 0 ? 'Hoy' : `${dias} d`}
-        </span>
+        <span className={'ag-chip chip-' + urg}>{dias < 0 ? 'Vencido' : dias === 0 ? 'Hoy' : `${dias} d`}</span>
       </div>
     </div>
   );
 }
 
-function Calendario() {
-  const eventos = React.useMemo(buildEventos, []);
+function Calendario({ servicios }) {
+  const eventos = React.useMemo(() => buildEventos(servicios), [servicios]);
   const [cursor, setCursor] = React.useState(() => new Date(HOY.getFullYear(), HOY.getMonth(), 1));
   const [filtros, setFiltros] = React.useState({ servicio: true, seguro: true, vuelo: true });
   const [sel, setSel] = React.useState(null);
 
   const toISO = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   const hoyISO = toISO(HOY);
-
   const visibles = eventos.filter((e) => filtros[e.tipo]);
   const porFecha = {};
   visibles.forEach((e) => (porFecha[e.fecha] = porFecha[e.fecha] || []).push(e));
@@ -939,7 +985,6 @@ function Calendario() {
   const primero = new Date(year, month, 1);
   const offset = (primero.getDay() + 6) % 7;
   const diasMes = new Date(year, month + 1, 0).getDate();
-
   const celdas = [];
   for (let i = 0; i < offset; i++) celdas.push(null);
   for (let d = 1; d <= diasMes; d++) celdas.push(new Date(year, month, d));
@@ -970,16 +1015,14 @@ function Calendario() {
           ))}
         </div>
       </div>
-
       <div className="cal-wrap">
         <div className="card cal-card">
           <div className="cal-bar">
-            <button className="cal-nav" onClick={() => cambiarMes(-1)} aria-label="Mes anterior">‹</button>
+            <button className="cal-nav" onClick={() => cambiarMes(-1)}>‹</button>
             <h2 className="cal-month">{MESES[month]} <span>{year}</span></h2>
-            <button className="cal-nav" onClick={() => cambiarMes(1)} aria-label="Mes siguiente">›</button>
+            <button className="cal-nav" onClick={() => cambiarMes(1)}>›</button>
             <button className="cal-today" onClick={() => { setCursor(new Date(HOY.getFullYear(), HOY.getMonth(), 1)); setSel(null); }}>Hoy</button>
           </div>
-
           <div className="cal-grid cal-dow">
             {DIAS_SEM.map((d) => <div key={d} className="dow">{d}</div>)}
           </div>
@@ -988,20 +1031,14 @@ function Calendario() {
               if (!d) return <div key={i} className="cal-cell empty-cell" />;
               const iso = toISO(d);
               const evs = porFecha[iso] || [];
-              const isHoy = iso === hoyISO;
-              const isSel = iso === sel;
               return (
-                <button
-                  key={i}
-                  className={'cal-cell' + (isHoy ? ' is-hoy' : '') + (isSel ? ' is-sel' : '') + (evs.length ? ' has-ev' : '')}
-                  onClick={() => setSel(evs.length ? iso : null)}
-                >
+                <button key={i}
+                  className={'cal-cell' + (iso === hoyISO ? ' is-hoy' : '') + (iso === sel ? ' is-sel' : '') + (evs.length ? ' has-ev' : '')}
+                  onClick={() => setSel(evs.length ? iso : null)}>
                   <span className="cell-num">{d.getDate()}</span>
                   <span className="cell-evs">
                     {evs.slice(0, 3).map((e, j) => (
-                      <span key={j} className={'ev-pill ' + TIPO_META[e.tipo].cls + (e.estatus === 'Vencido' ? ' is-vencido' : '')}>
-                        {e.titulo}
-                      </span>
+                      <span key={j} className={'ev-pill ' + TIPO_META[e.tipo].cls + (e.estatus === 'Vencido' ? ' is-vencido' : '')}>{e.titulo}</span>
                     ))}
                     {evs.length > 3 && <span className="ev-more">+{evs.length - 3} más</span>}
                   </span>
@@ -1026,8 +1063,12 @@ function Calendario() {
             <div className="card side-card">
               <div className="side-head"><span>Próximos 30 días</span><span className="side-count">{agenda.length}</span></div>
               <div className="side-list">
-                {agenda.length === 0 && <div className="side-empty">Sin pendientes en el rango.</div>}
-                {agenda.map((e, i) => <AgendaItem key={i} e={e} showDate />)}
+                {agenda.length === 0 ? (
+                  <div className="side-empty">
+                    <span className="side-empty-icon">📅</span>
+                    <span>Sin pendientes en los próximos 30 días</span>
+                  </div>
+                ) : agenda.map((e, i) => <AgendaItem key={i} e={e} showDate />)}
               </div>
             </div>
           )}
@@ -1036,22 +1077,110 @@ function Calendario() {
     </div>
   );
 }
-
 window.Calendario = Calendario;
 </script>
 
 <!-- app -->
 <script type="text/babel">
+const PERIODOS = ['Enero 2026','Febrero 2026','Marzo 2026','Abril 2026','Mayo 2026','Junio 2026','Julio 2026','Agosto 2026','Septiembre 2026','Octubre 2026','Noviembre 2026','Diciembre 2026'];
+
 const TABS = [
+  { id: 'calendario', label: 'Calendario', Icon: IconCalendar, Comp: Calendario },
   { id: 'avion', label: 'Reporte de Avión', Icon: IconPlane, Comp: ReporteAvion },
   { id: 'servicios', label: 'Servicios', Icon: IconBolt, Comp: Servicios },
   { id: 'seguros', label: 'Seguros de Autos', Icon: IconShield, Comp: Seguros },
-  { id: 'calendario', label: 'Calendario', Icon: IconCalendar, Comp: Calendario },
 ];
 
+function AlertBanner({ servicios }) {
+  const vencidosServ = servicios.filter((s) => s.estatus === 'Vencido');
+  const proxSeguros = SEGUROS_BASE.filter((s) => daysUntil(s.vence) >= 0 && daysUntil(s.vence) <= 7);
+  const hoyServ = servicios.filter((s) => s.estatus !== 'Pagado' && daysUntil(s.vence) === 0);
+  const totalOk = servicios.filter((s) => s.estatus === 'Pagado').length;
+
+  if (vencidosServ.length === 0 && proxSeguros.length === 0 && hoyServ.length === 0) return null;
+
+  return (
+    <div className="alert-banner">
+      {vencidosServ.length > 0 && (
+        <div className="alert-item alert-danger">
+          <span className="alert-dot" />
+          {vencidosServ.length} recibo{vencidosServ.length > 1 ? 's' : ''} vencido{vencidosServ.length > 1 ? 's' : ''} · {MXN(vencidosServ.reduce((a,s) => a + s.monto, 0))}
+        </div>
+      )}
+      {hoyServ.length > 0 && (
+        <div className="alert-item alert-warning">
+          <span className="alert-dot" />
+          {hoyServ.length} recibo{hoyServ.length > 1 ? 's' : ''} vence{hoyServ.length === 1 ? '' : 'n'} hoy
+        </div>
+      )}
+      {proxSeguros.length > 0 && (
+        <div className="alert-item alert-warning">
+          <span className="alert-dot" />
+          {proxSeguros.length} póliza{proxSeguros.length > 1 ? 's' : ''} vence{proxSeguros.length === 1 ? '' : 'n'} esta semana
+        </div>
+      )}
+      {totalOk > 0 && (
+        <div className="alert-item alert-ok">
+          <span className="alert-dot" />
+          {totalOk} recibo{totalOk > 1 ? 's' : ''} al día
+        </div>
+      )}
+    </div>
+  );
+}
+
+function WelcomeToast({ servicios, onClose }) {
+  const vencidos = servicios.filter((s) => s.estatus === 'Vencido');
+  const hoy = servicios.filter((s) => s.estatus !== 'Pagado' && daysUntil(s.vence) === 0);
+  const proxSeg = SEGUROS_BASE.filter((s) => daysUntil(s.vence) >= 0 && daysUntil(s.vence) <= 7);
+
+  const urgentes = [
+    ...vencidos.map((s) => ({ color: '#d23030', texto: `${s.servicio} ${s.local} — vencido` })),
+    ...hoy.map((s) => ({ color: '#c98a00', texto: `${s.servicio} ${s.local} — vence hoy` })),
+    ...proxSeg.map((s) => ({ color: '#c98a00', texto: `Póliza ${s.vehiculo} — ${daysUntil(s.vence)} días` })),
+  ].slice(0, 4);
+
+  return (
+    <div className="toast toast-welcome">
+      <div style={{ display: 'flex', width: '100%', alignItems: 'flex-start', gap: '8px' }}>
+        <div style={{ flex: 1 }}>
+          <div className="tw-title">Buenos días, Deyanira 👋</div>
+          <div style={{ fontSize: '12px', color: 'rgba(255,255,255,.6)', marginTop: '2px' }}>
+            {urgentes.length > 0 ? `${urgentes.length} pendiente${urgentes.length > 1 ? 's' : ''} urgente${urgentes.length > 1 ? 's' : ''} hoy` : 'Todo al día — sin urgentes'}
+          </div>
+        </div>
+        <button className="toast-close" onClick={onClose}>×</button>
+      </div>
+      {urgentes.length > 0 && (
+        <div className="tw-items">
+          {urgentes.map((u, i) => (
+            <div key={i} className="tw-item">
+              <span className="tw-dot" style={{ background: u.color }} />
+              {u.texto}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function App() {
-  const [tab, setTab] = React.useState(() => localStorage.getItem('decsa-tab') || 'avion');
+  const [tab, setTab] = React.useState(() => localStorage.getItem('decsa-tab') || 'calendario');
+  const [servicios, setServicios] = React.useState(SERVICIOS_BASE);
+  const [periodo, setPeriodo] = React.useState('Junio 2026');
+  const [showWelcome, setShowWelcome] = React.useState(false);
+
   React.useEffect(() => { localStorage.setItem('decsa-tab', tab); }, [tab]);
+  React.useEffect(() => {
+    const t = setTimeout(() => setShowWelcome(true), 600);
+    const t2 = setTimeout(() => setShowWelcome(false), 6000);
+    return () => { clearTimeout(t); clearTimeout(t2); };
+  }, []);
+
+  const marcarPagado = (id) => {
+    setServicios((prev) => prev.map((s) => s.id === id ? { ...s, estatus: 'Pagado' } : s));
+  };
 
   const Active = TABS.find((t) => t.id === tab).Comp;
 
@@ -1064,33 +1193,35 @@ function App() {
           <span className="brand-sub">Panel Operativo</span>
         </div>
         <div className="topbar-right">
-          <div className="period">Periodo activo · Junio 2026</div>
+          <select className="period-select" value={periodo} onChange={(e) => setPeriodo(e.target.value)}>
+            {PERIODOS.map((p) => <option key={p} value={p}>{p}</option>)}
+          </select>
           <div className="avatar-wrap">
-              <div className="avatar">D</div>
-              <span className="avatar-name">Deyanira</span>
-            </div>
+            <div className="avatar">D</div>
+            <span className="avatar-name">Deyanira</span>
+          </div>
         </div>
       </header>
 
+      <AlertBanner servicios={servicios} />
+
       <nav className="tabs">
         {TABS.map((t) => (
-          <button
-            key={t.id}
-            className={'tab' + (tab === t.id ? ' is-active' : '')}
-            onClick={() => setTab(t.id)}
-          >
+          <button key={t.id} className={'tab' + (tab === t.id ? ' is-active' : '')} onClick={() => setTab(t.id)}>
             <t.Icon /> <span>{t.label}</span>
           </button>
         ))}
       </nav>
 
       <main className="content">
-        <Active />
+        <Active servicios={servicios} onMarcarPagado={marcarPagado} periodo={periodo} />
       </main>
 
       <footer className="footer">
-        DECSA · Panel Operativo interno — datos de demostración
+        DECSA · Panel Operativo · Administración · Deyanira — datos de demostración
       </footer>
+
+      {showWelcome && <WelcomeToast servicios={servicios} onClose={() => setShowWelcome(false)} />}
     </div>
   );
 }
